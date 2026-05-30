@@ -185,6 +185,10 @@ export function useConfig() {
   // "home" = lobby (iframe of the saved HTML)
   // "login" = brand-coloured login form
   const [activePage, setActivePage] = useState("home");
+  // Preview device frame. "desktop" = iframe fills the preview pane;
+  // "mobile" = iframe is constrained to a 400px phone-frame, triggering the saved
+  // HTMLs' own mobile media queries.
+  const [deviceMode, setDeviceMode] = useState("desktop");
   const [siteNamesByTheme, setSiteNamesByTheme] = useState({
     sky: "SKYEXCHANGE",
     tiger: "TIGEREXCH",
@@ -325,6 +329,8 @@ export function useConfig() {
     setActiveTheme,
     activePage,
     setActivePage,
+    deviceMode,
+    setDeviceMode,
     siteName,
     setSiteName,
     brand,

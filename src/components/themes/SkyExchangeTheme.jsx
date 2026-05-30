@@ -156,12 +156,12 @@ export default function SkyExchangeTheme({ logoSrc, logoSize = 36, brand, active
       style.textContent = HIDE_CSS_LOGIN;
       applyBrandVars(doc, brand || "#ffb400");
       liftToBody(doc, ".login-modal-overlay");
-      // Replace the modal's hard-coded logo with the user's primary logo.
-      swapLogoImg(doc, ".login-modal-logo", logoSrc);
-      // Re-run a tick later in case the modal mounts via React after onload.
+      // Login modal logo grows nicely; double the header size for visibility.
+      const loginLogoSize = logoSize * 2;
+      swapLogoImg(doc, ".login-modal-logo", logoSrc, loginLogoSize);
       setTimeout(() => {
         liftToBody(doc, ".login-modal-overlay");
-        swapLogoImg(doc, ".login-modal-logo", logoSrc);
+        swapLogoImg(doc, ".login-modal-logo", logoSrc, loginLogoSize);
       }, 400);
       setReady(true);
       return;
@@ -182,7 +182,7 @@ export default function SkyExchangeTheme({ logoSrc, logoSize = 36, brand, active
     if (!doc) return;
     applyBrandVars(doc, brand || (activePage === "login" ? "#ffb400" : "#474747"));
     if (activePage === "login") {
-      swapLogoImg(doc, ".login-modal-logo", logoSrc);
+      swapLogoImg(doc, ".login-modal-logo", logoSrc, logoSize * 2);
     } else {
       swapHeaderTextWithLogo(doc, logoSrc, logoSize);
     }

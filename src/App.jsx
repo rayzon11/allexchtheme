@@ -44,7 +44,7 @@ export default function App() {
         onRequestDesign={() => setOrderOpen(true)}
       />
 
-      <main className="preview-pane">
+      <main className={`preview-pane device-${config.deviceMode}`}>
         {config.activeTheme === "sky" ? (
           <SkyExchangeTheme {...themeProps} />
         ) : (

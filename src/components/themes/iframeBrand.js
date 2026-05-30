@@ -28,11 +28,20 @@ export function applyBrandVars(doc, brand) {
   }
 }
 
-/** Swap an iframe `<img>`'s src to the user's uploaded logo. */
-export function swapLogoImg(doc, selector, newSrc) {
+/** Swap an iframe `<img>`'s src to the user's uploaded logo. Optional `size` (px)
+ *  forces the rendered height with !important so external CSS can't override the
+ *  size slider value. */
+export function swapLogoImg(doc, selector, newSrc, size) {
   if (!newSrc) return;
   const img = doc?.querySelector(selector);
-  if (img && img.src !== newSrc) img.src = newSrc;
+  if (!img) return;
+  if (img.src !== newSrc) img.src = newSrc;
+  if (typeof size === "number" && size > 0) {
+    img.style.setProperty("height", `${size}px`, "important");
+    img.style.setProperty("width", "auto", "important");
+    img.style.setProperty("max-width", "none", "important");
+    img.style.setProperty("object-fit", "contain", "important");
+  }
 }
 
 /** Lift the matching element up to be a direct `<body>` child. */

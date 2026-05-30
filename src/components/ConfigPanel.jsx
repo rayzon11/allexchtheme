@@ -51,6 +51,8 @@ export default function ConfigPanel({
   setActiveTheme,
   activePage,
   setActivePage,
+  deviceMode,
+  setDeviceMode,
   siteName,
   setSiteName,
   brand,
@@ -120,6 +122,26 @@ export default function ConfigPanel({
             onClick={() => setActivePage("login")}
           >
             🔐 Login
+          </button>
+        </div>
+      </div>
+
+      <div className="config-section">
+        <div className="config-section-title">Device</div>
+        <div className="page-switcher">
+          <button
+            type="button"
+            className={`page-btn ${deviceMode === "desktop" ? "active" : ""}`}
+            onClick={() => setDeviceMode("desktop")}
+          >
+            🖥️ Desktop
+          </button>
+          <button
+            type="button"
+            className={`page-btn ${deviceMode === "mobile" ? "active" : ""}`}
+            onClick={() => setDeviceMode("mobile")}
+          >
+            📱 Mobile
           </button>
         </div>
       </div>

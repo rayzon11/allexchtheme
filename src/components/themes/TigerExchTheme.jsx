@@ -115,11 +115,12 @@ export default function TigerExchTheme({ siteName, logoSrc, markLogoSrc, logoSiz
       liftToBody(doc, ".modal.loginhomemodal");
       // Replace the modal's tiger-face image with the user's mark/primary logo.
       const newSrc = markLogoSrc || logoSrc;
-      swapLogoImg(doc, ".modal-content img", newSrc);
+      const loginLogoSize = (markLogoSrc ? markSize : logoSize) * 1.5;
+      swapLogoImg(doc, ".modal-content img", newSrc, loginLogoSize);
       setTimeout(() => {
         liftToBody(doc, ".modal-backdrop");
         liftToBody(doc, ".modal.loginhomemodal");
-        swapLogoImg(doc, ".modal-content img", newSrc);
+        swapLogoImg(doc, ".modal-content img", newSrc, loginLogoSize);
       }, 400);
     } else {
       style.textContent = HIDE_CSS_HOME;
@@ -133,8 +134,10 @@ export default function TigerExchTheme({ siteName, logoSrc, markLogoSrc, logoSiz
     const doc = iframeRef.current?.contentDocument;
     if (!doc) return;
     applyBrandVars(doc, brand || "#cc0a00");
-    swapLogoImg(doc, ".modal-content img", markLogoSrc || logoSrc);
-  }, [brand, logoSrc, markLogoSrc, activePage]);
+    const newSrc = markLogoSrc || logoSrc;
+    const sz = (markLogoSrc ? markSize : logoSize) * 1.5;
+    swapLogoImg(doc, ".modal-content img", newSrc, sz);
+  }, [brand, logoSrc, markLogoSrc, logoSize, markSize, activePage]);
 
   return (
     <div className={`tig-stage${showChromeOverlays ? "" : " tig-stage-login"}`}>
