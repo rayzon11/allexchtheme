@@ -1,0 +1,25 @@
+# Dependencies — re-installed by `npm install`
+node_modules/
+
+# Build outputs — Vercel rebuilds these from source
+dist/
+.vite/
+
+# Local dev logs
+vite-err.log
+vite-out.log
+vite-preview.log
+vite-wmi.log
+npm-debug.log*
+
+# Editor / OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+
+# Optional env files (none used right now, but reserved)
+.env
+.env.local
+.env.*.local

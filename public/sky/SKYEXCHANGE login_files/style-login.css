@@ -1,0 +1,262 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #ffc629;
+  min-height: 100vh;
+}
+
+.mobile-container {
+  max-width: 480px;
+  /* Limit width to simulate mobile on desktop if needed */
+  margin: 0 auto;
+  background-color: #ffc629;
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 60px;
+  /* Space for bottom bar */
+}
+
+/* Header Section */
+
+.header-section {
+  background: url("../images/mobile/gamehall/KV-pic.png");
+  background-size: 100% 100%;
+  background-position: center;
+  height: 300px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.close-btn {
+  top: 15px;
+  right: 15px;
+  border: none;
+  color: white;
+  border-radius: 50%;
+  /* Ensure it stays on top */
+}
+
+.logo-container {
+  text-align: center;
+  margin-top: -20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.logo-img {
+  max-width: 200px;
+  /* Adjust based on preference, ensuring it fits well */
+  height: auto;
+}
+
+/* Content Section */
+
+.content-section {
+  padding: 20px 30px;
+}
+
+/* Form Styles */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 6px;
+  border: none;
+  font-size: 15px;
+  outline: none;
+}
+
+.validation-input-wrapper {
+  position: relative;
+}
+
+.captcha-code {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+.login-btn {
+  background: linear-gradient(to bottom, #333, #000);
+  color: #ffc629;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  margin-top: 5px;
+}
+
+/* Footer Links */
+
+.footer-links {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 12px;
+  color: #333;
+  line-height: 1.6;
+}
+
+.footer-links a {
+  color: #333;
+  text-decoration: underline;
+}
+
+/* Support Section */
+
+.support-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.support-card {
+  background-color: #ffeebb;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  color: #4a4a4a;
+}
+
+.full-width {
+  justify-content: center;
+  gap: 15px;
+}
+
+.icon-circle {
+  background-color: #4a4a4a;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.support-card i {
+  font-size: 20px;
+}
+
+.support-card.full-width .icon-circle {
+  background-color: #4a4a4a;
+  /* Icon background */
+}
+
+/* Override for the specific design where icon is just dark without circle in some places? 
+   Actually in image 2, the headset and whatsapp icons are inside dark circles. */
+
+.support-text {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.separator {
+  margin: 0 5px;
+  color: #888;
+}
+
+.spacer-bar {
+  height: 15px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  margin: 5px 0;
+}
+
+.support-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.support-card.small {
+  flex: 1;
+  flex-direction: row;
+  /* Icon next to text */
+  justify-content: center;
+  gap: 8px;
+  padding: 15px 5px;
+  /* Taller padding */
+}
+
+.support-card.small i {
+  color: #4a4a4a;
+  font-size: 24px;
+  /* Larger icons for bottom row */
+}
+
+.support-card.small span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Bottom fixed support bar (Image 1 bottom part) */
+
+.bottom-support-bar {
+  display: none;
+  /* It seems image 1 has a bottom bar, but image 2 shows it's just the support section. 
+                     The user said "2 images", usually meaning scroll or states. 
+                     Image 1 shows "Customer support1 | support2" at the very bottom inside a beige box.
+                     Image 2 shows the full support list. 
+                     I will assume Image 1 shows the state before scrolling down, or a sticky footer.
+                     Let's make a sticky footer for the first support item if we want to be exact, 
+                     but the user wants "a login page like this", so stacking them is better.
+                     I'll stick to the static layout in content-section. */
+}
+
+/* Adjusting icon colors for the bottom row */
+
+.support-card.small i.fa-skype {
+  color: #4a4a4a;
+}
+
+.support-card.small i.fa-paper-plane {
+  color: #4a4a4a;
+}
+
+.support-card.small i.fa-instagram {
+  color: #4a4a4a;
+}
+
+/* Refine the header curve */
+
+.header-section::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  /* overlap slightly to avoid gap */
+  left: 0;
+  width: 100%;
+  height: 40px;
+  /* This is tricky with simple border radius. 
+       Let's use the border-radius on the header itself as done above.
+       border-bottom-left-radius: 50% 40px; 
+       This creates a convex curve (bulges down).
+    */
+}
