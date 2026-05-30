@@ -17,11 +17,12 @@ function swapHeaderTextWithLogo(doc, src, size = 36) {
   const img = doc.createElement("img");
   img.src = src;
   img.alt = "logo";
-  img.style.height = `${size}px`;
-  img.style.maxWidth = "320px";
-  img.style.width = "auto";
-  img.style.objectFit = "contain";
-  img.style.display = "block";
+  // Force !important so no saved-HTML CSS rule can override the slider value.
+  img.style.setProperty("height", `${size}px`, "important");
+  img.style.setProperty("max-width", "320px", "important");
+  img.style.setProperty("width", "auto", "important");
+  img.style.setProperty("object-fit", "contain", "important");
+  img.style.setProperty("display", "block", "important");
   anchor.appendChild(img);
 }
 
