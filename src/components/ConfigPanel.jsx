@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import LogoUpload from "./LogoUpload";
 import DomainCheck from "./DomainCheck";
+import VariantDetailModal from "./VariantDetailModal";
 import {
   SKY_PRESETS,
   TIGER_PRESETS,
+  SKY_GROUP_COLOURS,
   isValidHex,
   normaliseHex,
 } from "../hooks/useConfig";
@@ -95,6 +97,21 @@ export default function ConfigPanel({
 }) {
   const isSky = activeTheme === "sky";
   const presets = isSky ? SKY_PRESETS : TIGER_PRESETS;
+  const [detailVariant, setDetailVariant] = useState(null);
+
+  // Group Sky presets by colour family (Yellow / Green / Blue / ...) so the
+  // gallery shows the Notion-style sectioned layout. Tiger keeps its flat list.
+  const skyGroups = useMemo(() => {
+    if (!isSky) return [];
+    const order = ["Yellow", "Green", "Blue", "Red", "Pink", "Purple", "Brown", "Dark"];
+    const buckets = {};
+    SKY_PRESETS.forEach((p) => {
+      const g = p.group || "Other";
+      if (!buckets[g]) buckets[g] = [];
+      buckets[g].push(p);
+    });
+    return order.filter((g) => buckets[g]).map((g) => ({ group: g, items: buckets[g] }));
+  }, [isSky]);
 
   return (
     <aside className="config-panel">
@@ -214,53 +231,89 @@ export default function ConfigPanel({
 
       <div className="config-section">
         <div className="config-section-title">
-          {isSky ? "Sky Design Shop" : "Tiger Design Shop"}
+          {isSky ? "Sky Theme — Gallery" : "Tiger Design Shop"}
         </div>
         <div className="config-section-sub">
-          Pick a style — each card applies a complete look
+          {isSky ? "Click any card to open the design — Desktop + Mobile preview." : "Pick a style — preview opens on click."}
         </div>
-        <div className="shop-grid">
-          {presets.map((p) => {
-            const active = p.brand.toLowerCase() === brand.toLowerCase();
-            return (
-              <button
-                key={p.name}
-                type="button"
-                className={`shop-card${active ? " active" : ""}`}
-                onClick={() => {
-                  setBrand(p.brand);
-                  // For Tiger, pop the full-screen live preview on click.
-                  if (!isSky && onOpenPreview) onOpenPreview();
-                }}
-                title={p.name}
-              >
-                <span className="shop-card-preview" aria-hidden="true">
-                  {p.preview ? (
-                    <img src={p.preview} alt={p.name} className="shop-preview-img" />
-                  ) : isSky ? (
-                    <>
-                      <span className="shop-preview-bar" style={{ background: `linear-gradient(180deg, ${p.brand}, ${darkenHex(p.brand, 0.35)})` }} />
-                      <span className="shop-preview-menu" />
-                      <span className="shop-preview-body" />
-                    </>
-                  ) : (
-                    <>
-                      <span className="shop-preview-bar" style={{ background: p.brand }} />
-                      <span className="shop-preview-side" style={{ background: p.brand }} />
-                      <span className="shop-preview-body-tiger" />
-                    </>
-                  )}
-                </span>
-                <span className="shop-card-meta">
-                  <span className="shop-card-dot" style={{ background: p.brand }} />
-                  <span className="shop-card-name">{p.name}</span>
-                </span>
-                {active && <span className="shop-card-tag">✓ Selected</span>}
-              </button>
-            );
-          })}
-        </div>
+
+        {isSky ? (
+          <div className="gallery-list">
+            {skyGroups.map(({ group, items }) => (
+              <section key={group} className="gallery-group">
+                <header className="gallery-group-head">
+                  <span
+                    className="gallery-group-pill"
+                    style={{ background: `${SKY_GROUP_COLOURS[group]}22`, color: SKY_GROUP_COLOURS[group] }}
+                  >
+                    <i style={{ background: SKY_GROUP_COLOURS[group] }} />
+                    {group}
+                  </span>
+                  <span className="gallery-group-count">{items.length}</span>
+                </header>
+                <div className="gallery-grid">
+                  {items.map((p) => {
+                    const active = p.brand.toLowerCase() === brand.toLowerCase();
+                    return (
+                      <button
+                        key={p.code}
+                        type="button"
+                        className={`gallery-card${active ? " active" : ""}`}
+                        onClick={() => setDetailVariant(p)}
+                        title={`${p.code} ${p.name}`}
+                      >
+                        <span className="gallery-card-preview" aria-hidden="true">
+                          <img src={p.preview} alt={p.name} className="shop-preview-img" />
+                        </span>
+                        <span className="gallery-card-foot">
+                          <span className="gallery-card-tag" style={{ background: SKY_GROUP_COLOURS[group] }} />
+                          <span className="gallery-card-code">{p.code}</span>
+                        </span>
+                        {active && <span className="shop-card-tag">✓</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
+          </div>
+        ) : (
+          <div className="shop-grid">
+            {presets.map((p) => {
+              const active = p.brand.toLowerCase() === brand.toLowerCase();
+              return (
+                <button
+                  key={p.name}
+                  type="button"
+                  className={`shop-card${active ? " active" : ""}`}
+                  onClick={() => { setBrand(p.brand); if (onOpenPreview) onOpenPreview(); }}
+                  title={p.name}
+                >
+                  <span className="shop-card-preview" aria-hidden="true">
+                    <span className="shop-preview-bar" style={{ background: p.brand }} />
+                    <span className="shop-preview-side" style={{ background: p.brand }} />
+                    <span className="shop-preview-body-tiger" />
+                  </span>
+                  <span className="shop-card-meta">
+                    <span className="shop-card-dot" style={{ background: p.brand }} />
+                    <span className="shop-card-name">{p.name}</span>
+                  </span>
+                  {active && <span className="shop-card-tag">✓ Selected</span>}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
+
+      <VariantDetailModal
+        variant={detailVariant}
+        onClose={() => setDetailVariant(null)}
+        onApply={() => {
+          if (detailVariant) setBrand(detailVariant.brand);
+          setDetailVariant(null);
+        }}
+      />
 
       <div className="config-section">
         <div className="config-section-title">Domain Availability</div>

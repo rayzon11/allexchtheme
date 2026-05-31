@@ -585,6 +585,358 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
+/* ============================================
+   NOTION-STYLE SKY GALLERY (grouped) + card thumbs
+   ============================================ */
+.gallery-list { display: flex; flex-direction: column; gap: 14px; }
+.gallery-group { display: flex; flex-direction: column; gap: 8px; }
+.gallery-group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+}
+.gallery-group-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.gallery-group-pill i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.gallery-group-count {
+  font-size: 11px;
+  color: var(--c-text-muted);
+  font-weight: 600;
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.gallery-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--c-bg-2);
+  border: 1.5px solid var(--c-line);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.gallery-card:hover {
+  border-color: var(--c-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+}
+.gallery-card.active {
+  border-color: var(--c-accent);
+  box-shadow: 0 0 0 2px var(--c-accent), 0 8px 20px color-mix(in srgb, var(--c-accent) 30%, transparent);
+}
+.gallery-card-preview {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  background: #f5f7fa;
+  position: relative;
+  overflow: hidden;
+}
+.gallery-card-foot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: var(--c-bg-3);
+  border-top: 1px solid var(--c-line);
+}
+.gallery-card-tag {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.gallery-card-code {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-text);
+  letter-spacing: 0.02em;
+}
+
+/* ============================================
+   VARIANT DETAIL MODAL (Notion-style design preview)
+   ============================================ */
+.variant-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  background: rgba(20, 18, 16, 0.85);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  animation: fade-in 0.18s ease;
+  backdrop-filter: blur(6px);
+  overflow-y: auto;
+}
+.variant-modal-card {
+  width: min(1200px, 100%);
+  max-height: calc(100vh - 48px);
+  background: var(--c-bg-1);
+  border: 1px solid var(--c-line);
+  border-radius: 16px;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: pop-in 0.22s ease;
+}
+.variant-modal-head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 24px;
+  background: var(--c-bg-2);
+  border-bottom: 1px solid var(--c-line);
+}
+.variant-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.variant-modal-code {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+.variant-modal-title strong {
+  font-size: 18px;
+  color: var(--c-text);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.variant-modal-group {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--c-text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  background: var(--c-bg-3);
+  border-radius: 4px;
+}
+.variant-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.variant-apply-btn {
+  height: 36px;
+  padding: 0 16px;
+  background: var(--c-accent);
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.variant-apply-btn:hover {
+  background: var(--c-accent-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--c-accent) 35%, transparent);
+}
+.variant-close-btn {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  background: var(--c-bg-3);
+  border: 1px solid var(--c-line);
+  border-radius: 8px;
+  color: var(--c-text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.variant-close-btn:hover {
+  background: var(--c-danger);
+  border-color: var(--c-danger);
+  color: #fff;
+}
+
+.variant-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  background: var(--c-bg-0);
+}
+.variant-section { display: flex; flex-direction: column; gap: 12px; }
+.variant-section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--c-text);
+  letter-spacing: -0.01em;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.variant-section-icon { font-size: 20px; }
+
+.variant-section-grid-desktop {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.variant-section-grid-mobile {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.variant-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+.variant-frame figcaption {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.variant-frame-inner {
+  position: relative;
+  background: #f5f7fa;
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+}
+.variant-frame-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+.variant-frame-mobile .variant-frame-inner { aspect-ratio: 9 / 16; }
+
+/* Login modal overlay drawn over the desktop frame */
+.variant-frame-login { position: relative; }
+.variant-frame-login-modal {
+  position: absolute;
+  inset: 18% 22%;
+  background: #f5f5f5;
+  border-top: 4px solid var(--c-accent);
+  border-radius: 8px;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.variant-login-strip {
+  padding: 8px 12px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+.variant-login-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+}
+.variant-login-fields span {
+  display: block;
+  height: 18px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 0 6px;
+  font-size: 9px;
+  line-height: 17px;
+  color: #999;
+}
+.variant-login-fields button {
+  height: 22px;
+  border: 0;
+  border-radius: 3px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 2px;
+}
+
+/* Mobile login frame uses a solid gradient backdrop */
+.variant-frame-login-mobile {
+  display: flex;
+  flex-direction: column;
+  padding: 22% 14% 12%;
+  gap: 8px;
+  position: relative;
+}
+.variant-mlogin-banner {
+  flex: 1;
+  background:
+    radial-gradient(ellipse at top, rgba(255, 255, 255, 0.16), transparent 60%),
+    rgba(0, 0, 0, 0.18);
+  border-radius: 8px;
+}
+.variant-mlogin-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+}
+.variant-mlogin-fields span {
+  height: 22px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0 8px;
+  font-size: 10px;
+  line-height: 21px;
+  color: #777;
+}
+.variant-mlogin-fields button {
+  height: 28px;
+  border: 0;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 /* Logo size slider */
 .logo-size-row {
   display: grid;
