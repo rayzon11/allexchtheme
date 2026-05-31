@@ -5,71 +5,65 @@ import { useCallback, useEffect, useState } from "react";
 export const SKY_DEFAULT_BRAND = "#474747"; // dark grey — same as the saved Sky header
 export const TIGER_DEFAULT_BRAND = "#cc0a00"; // red — same as the saved Tiger nav
 
-// Sky design shop — variants matched to the actual Notion reference screenshots.
-// Each preset bundles a brand colour AND a real screenshot of the variant so the
-// customer browses real product photos in the shop grid.
-// Sky variant catalog organised like the Notion gallery — each entry's brand
-// hex truly matches the header colour visible in its preview screenshot.
+// Sky design shop — variants matched 1:1 to the Notion reference screenshots.
+// Each preset's brand hex is the EXACT pixel colour sampled from the header
+// strip of its preview screenshot. No estimates — pure pngjs reads.
 //
-//   sky-v1  Charcoal/black            v12  Deep Purple
-//   sky-v2  Tan (brown)               v13  Royal Blue
-//   sky-v3  Rose Pink                 v14  Dark Teal
-//   sky-v4  Maroon (dark red)         v15  Light Orange
-//   sky-v5  Light Blue                v16  Orange-Red
-//   sky-v6  Mocha Brown               v17  Royal Purple
-//   sky-v7  Dark Green                v18  Forest Green
-//   sky-v8  Silver Grey               v19  Lime Green
-//   sky-v9  Classic Gold (yellow)     v20  Dark Orange
-//   sky-v10 Red                       v21  Black
-//   sky-v11 Dark Red
+// Sampling: y=1..5, x=2..30 (far-left header strip, away from logos/menu).
+// Source of truth: public/shop/sky-v{1..21}.png (boss exported from Notion).
+//
+//   v1  #FFB600 Gold        v8  #F37335 Orange       v15 #01294B Navy
+//   v2  #FFE8A3 Cream       v9  #F1592A Tomato       v16 #400078 Deep Purple
+//   v3  #FFB600 Gold Alt    v10 #920000 Dark Red     v17 #694B92 Lavender
+//   v4  #03B44F Bright Grn  v11 #810000 Maroon       v18 #E4E4E4 Silver
+//   v5  #15805E Forest      v12 #36010B Wine         v19 #A5A5A5 Grey
+//   v6  #68C092 Mint        v13 #015BAB Royal Blue   v20 #E4E4E4 Silver Alt
+//   v7  #466D05 Olive       v14 #1466B0 Steel Blue   v21 #FFB600 Gold Alt 2
 export const SKY_PRESETS = [
   // ── YELLOW / GOLD ──
-  { code: "Yl01", name: "Classic Gold",  brand: "#ffb400", group: "Yellow", preview: "/shop/sky-v9.png"  },
-  { code: "Yl02", name: "Lime",          brand: "#a3b800", group: "Yellow", preview: "/shop/sky-v19.png" },
+  { code: "Yl01", name: "Classic Gold",  brand: "#ffb600", group: "Yellow", preview: "/shop/sky-v1.png"  },
+  { code: "Yl02", name: "Cream",         brand: "#ffe8a3", group: "Yellow", preview: "/shop/sky-v2.png"  },
+  { code: "Yl03", name: "Gold Alt",      brand: "#ffb600", group: "Yellow", preview: "/shop/sky-v3.png"  },
+  { code: "Yl04", name: "Gold Classic",  brand: "#ffb600", group: "Yellow", preview: "/shop/sky-v21.png" },
 
   // ── GREEN ──
-  { code: "Gn01", name: "Emerald",       brand: "#1b5e20", group: "Green",  preview: "/shop/sky-v7.png"  },
-  { code: "Gn02", name: "Forest",        brand: "#2e7d32", group: "Green",  preview: "/shop/sky-v18.png" },
-  { code: "Gn03", name: "Teal",          brand: "#0d9488", group: "Green",  preview: "/shop/sky-v14.png" },
+  { code: "Gn01", name: "Bright Green",  brand: "#03b44f", group: "Green",  preview: "/shop/sky-v4.png"  },
+  { code: "Gn02", name: "Forest",        brand: "#15805e", group: "Green",  preview: "/shop/sky-v5.png"  },
+  { code: "Gn03", name: "Mint",          brand: "#68c092", group: "Green",  preview: "/shop/sky-v6.png"  },
+  { code: "Gn04", name: "Olive",         brand: "#466d05", group: "Green",  preview: "/shop/sky-v7.png"  },
 
-  // ── BLUE ──
-  { code: "Bl01", name: "Royal Blue",    brand: "#1d4ed8", group: "Blue",   preview: "/shop/sky-v13.png" },
-  { code: "Bl02", name: "Sky Blue",      brand: "#0ea5e9", group: "Blue",   preview: "/shop/sky-v5.png"  },
+  // ── ORANGE ──
+  { code: "Or01", name: "Orange",        brand: "#f37335", group: "Orange", preview: "/shop/sky-v8.png"  },
+  { code: "Or02", name: "Tomato",        brand: "#f1592a", group: "Orange", preview: "/shop/sky-v9.png"  },
 
   // ── RED ──
-  { code: "Rd01", name: "Crimson",       brand: "#c62828", group: "Red",    preview: "/shop/sky-v10.png" },
-  { code: "Rd02", name: "Maroon",        brand: "#7b1f1f", group: "Red",    preview: "/shop/sky-v4.png"  },
-  { code: "Rd03", name: "Cherry",        brand: "#8b0000", group: "Red",    preview: "/shop/sky-v11.png" },
-  { code: "Rd04", name: "Orange Red",    brand: "#ef5350", group: "Red",    preview: "/shop/sky-v16.png" },
+  { code: "Rd01", name: "Dark Red",      brand: "#920000", group: "Red",    preview: "/shop/sky-v10.png" },
+  { code: "Rd02", name: "Maroon",        brand: "#810000", group: "Red",    preview: "/shop/sky-v11.png" },
+  { code: "Rd03", name: "Wine",          brand: "#36010b", group: "Red",    preview: "/shop/sky-v12.png" },
 
-  // ── PINK ──
-  { code: "Pk01", name: "Rose Pink",     brand: "#d63384", group: "Pink",   preview: "/shop/sky-v3.png"  },
+  // ── BLUE ──
+  { code: "Bl01", name: "Royal Blue",    brand: "#015bab", group: "Blue",   preview: "/shop/sky-v13.png" },
+  { code: "Bl02", name: "Steel Blue",    brand: "#1466b0", group: "Blue",   preview: "/shop/sky-v14.png" },
+  { code: "Bl03", name: "Navy",          brand: "#01294b", group: "Blue",   preview: "/shop/sky-v15.png" },
 
   // ── PURPLE ──
-  { code: "Pp01", name: "Deep Purple",   brand: "#4a148c", group: "Purple", preview: "/shop/sky-v12.png" },
-  { code: "Pp02", name: "Royal Purple",  brand: "#6d28d9", group: "Purple", preview: "/shop/sky-v17.png" },
+  { code: "Pp01", name: "Deep Purple",   brand: "#400078", group: "Purple", preview: "/shop/sky-v16.png" },
+  { code: "Pp02", name: "Lavender",      brand: "#694b92", group: "Purple", preview: "/shop/sky-v17.png" },
 
-  // ── BROWN / EARTH ──
-  { code: "Bn01", name: "Tan",           brand: "#8b4513", group: "Brown",  preview: "/shop/sky-v2.png"  },
-  { code: "Bn02", name: "Mocha",         brand: "#6b4226", group: "Brown",  preview: "/shop/sky-v6.png"  },
-  { code: "Bn03", name: "Light Orange",  brand: "#f97316", group: "Brown",  preview: "/shop/sky-v15.png" },
-  { code: "Bn04", name: "Dark Orange",   brand: "#c2410c", group: "Brown",  preview: "/shop/sky-v20.png" },
-
-  // ── DARK ──
-  { code: "Dk01", name: "Charcoal",      brand: "#474747", group: "Dark",   preview: "/shop/sky-v1.png"  },
-  { code: "Dk02", name: "Silver Grey",   brand: "#6b7280", group: "Dark",   preview: "/shop/sky-v8.png"  },
-  { code: "Dk03", name: "Black",         brand: "#1f2937", group: "Dark",   preview: "/shop/sky-v21.png" },
+  // ── DARK / SILVER ──
+  { code: "Dk01", name: "Silver",        brand: "#e4e4e4", group: "Dark",   preview: "/shop/sky-v18.png" },
+  { code: "Dk02", name: "Grey",          brand: "#a5a5a5", group: "Dark",   preview: "/shop/sky-v19.png" },
+  { code: "Dk03", name: "Silver Alt",    brand: "#e4e4e4", group: "Dark",   preview: "/shop/sky-v20.png" },
 ];
 
 // Colour swatch beside each group header (matches the Notion pill tag).
 export const SKY_GROUP_COLOURS = {
   Yellow: "#fbbf24",
   Green: "#22c55e",
-  Blue: "#3b82f6",
+  Orange: "#f97316",
   Red: "#ef4444",
-  Pink: "#ec4899",
+  Blue: "#3b82f6",
   Purple: "#a855f7",
-  Brown: "#a16207",
   Dark: "#475569",
 };
 

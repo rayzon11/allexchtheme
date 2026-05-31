@@ -15,7 +15,7 @@ export default function MainGallery({ activeTheme, brand, setBrand, onTigerPrevi
 
   const groups = useMemo(() => {
     if (isSky) {
-      const order = ["Yellow", "Green", "Blue", "Red", "Pink", "Purple", "Brown", "Dark"];
+      const order = ["Yellow", "Green", "Orange", "Red", "Blue", "Purple", "Dark"];
       const buckets = {};
       SKY_PRESETS.forEach((p) => { (buckets[p.group || "Other"] ||= []).push(p); });
       return order.filter((g) => buckets[g]).map((g) => ({ group: g, items: buckets[g] }));
