@@ -1,10 +1,9 @@
 import { useRef } from "react";
-import { DEMO_LOGOS } from "../hooks/useConfig";
 
 /**
- * Logo upload control with preview + Upload button + (optional) demo grid.
- * Pass `showDemos={false}` for the secondary "Mark / Icon" slot so we don't
- * clutter the panel with the same demo strip twice.
+ * Single logo upload control — preview thumbnail with name + remove button,
+ * then a click-to-upload zone, then a size slider.
+ * No demo grid. One logo, one upload.
  */
 export default function LogoUpload({
   logoSrc,
@@ -13,12 +12,10 @@ export default function LogoUpload({
   hasCustomLogo,
   onUpload,
   onRemove,
-  onApplyDemo,
   size,
   onSizeChange,
   sizeMin = 16,
   sizeMax = 96,
-  showDemos = true,
   uploadLabel = "Upload your logo",
   replaceLabel = "Replace logo",
 }) {
@@ -36,7 +33,7 @@ export default function LogoUpload({
         {logoSrc ? (
           <img src={logoSrc} alt="logo" className="logo-preview-thumb" />
         ) : (
-          <span className="logo-preview-name" style={{ color: "#64748b" }}>No logo</span>
+          <span className="logo-preview-name" style={{ color: "#908a82" }}>No logo</span>
         )}
         <span className="logo-preview-name">
           {hasCustomLogo ? logoFileName : "Default"}
@@ -56,13 +53,13 @@ export default function LogoUpload({
         type="button"
         className="logo-upload-zone"
         onClick={handleClick}
-        style={{ marginTop: 8, minHeight: showDemos ? 56 : 44 }}
+        style={{ marginTop: 8 }}
       >
         <span>
-          <strong style={{ display: "block", marginBottom: 2, color: "#cbd5e1", fontSize: 12 }}>
+          <strong style={{ display: "block", marginBottom: 2, color: "#f4f1ec", fontSize: 13 }}>
             {hasCustomLogo ? replaceLabel : uploadLabel}
           </strong>
-          <small style={{ fontSize: 10 }}>PNG, JPG, SVG, WebP &middot; max 5MB</small>
+          <small style={{ fontSize: 11 }}>PNG, JPG, SVG, WebP &middot; max 5MB</small>
         </span>
       </button>
 
@@ -89,25 +86,6 @@ export default function LogoUpload({
           />
           <span className="logo-size-value">{size}px</span>
         </div>
-      )}
-
-      {showDemos && onApplyDemo && (
-        <>
-          <div className="demo-logos-title">Or pick a demo logo</div>
-          <div className="demo-logos-grid">
-            {DEMO_LOGOS.map((d) => (
-              <button
-                key={d.name}
-                type="button"
-                className={`demo-logo${logoSrc === d.src ? " active" : ""}`}
-                onClick={() => onApplyDemo(d)}
-                title={d.name}
-              >
-                <img src={d.src} alt={d.name} />
-              </button>
-            ))}
-          </div>
-        </>
       )}
     </div>
   );

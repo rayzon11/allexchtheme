@@ -61,17 +61,8 @@ export default function DesignPanel({
   logoError,
   uploadLogo,
   removeLogo,
-  applyDemoLogo,
-  markLogoSrc,
-  markFileName,
-  hasCustomMark,
-  markError,
-  uploadMark,
-  removeMark,
   logoSize,
-  markSize,
   setLogoSize,
-  setMarkSize,
   onRequestDesign,
   onOpenTigerPreview,
   mobileOpen,
@@ -186,7 +177,7 @@ export default function DesignPanel({
           </div>
 
           <div className="config-section">
-            <div className="config-section-title">Primary Logo (Header)</div>
+            <div className="config-section-title">Logo</div>
             <LogoUpload
               logoSrc={logoSrc}
               logoFileName={logoFileName}
@@ -194,31 +185,10 @@ export default function DesignPanel({
               logoError={logoError}
               onUpload={uploadLogo}
               onRemove={removeLogo}
-              onApplyDemo={applyDemoLogo}
               size={logoSize}
               onSizeChange={setLogoSize}
-              uploadLabel="Upload header logo"
-              replaceLabel="Replace header logo"
-            />
-          </div>
-
-          <div className="config-section">
-            <div className="config-section-title">
-              {isSky ? "Mark / Icon Logo" : "Mark Logo (Sidenav)"}
-            </div>
-            <LogoUpload
-              logoSrc={markLogoSrc}
-              logoFileName={markFileName}
-              hasCustomLogo={hasCustomMark}
-              logoError={markError}
-              onUpload={uploadMark}
-              onRemove={removeMark}
-              size={markSize}
-              onSizeChange={setMarkSize}
-              sizeMax={128}
-              showDemos={false}
-              uploadLabel="Upload mark / icon"
-              replaceLabel="Replace mark / icon"
+              uploadLabel="Upload your logo"
+              replaceLabel="Replace logo"
             />
           </div>
         </section>
