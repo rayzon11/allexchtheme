@@ -1,8 +1,8 @@
 import { useState } from "react";
+import DesignPanel from "./components/DesignPanel";
 import MainGallery from "./components/MainGallery";
 import OrderModal from "./components/OrderModal";
 import PreviewOverlay from "./components/PreviewOverlay";
-import SettingsPanel from "./components/SettingsPanel";
 import { useConfig, TIGER_PRESETS } from "./hooks/useConfig";
 import "./App.css";
 
@@ -87,9 +87,10 @@ export default function App() {
           />
         </main>
 
-        <SettingsPanel
+        <DesignPanel
           {...config}
           onRequestDesign={() => setOrderOpen(true)}
+          onOpenTigerPreview={() => setPreviewOpen(true)}
           mobileOpen={mobileSettingsOpen}
           onMobileToggle={() => setMobileSettingsOpen((v) => !v)}
         />
