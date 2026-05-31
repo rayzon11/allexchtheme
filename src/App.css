@@ -924,8 +924,24 @@ body {
   background: var(--c-bg-3);
   border-top: 1px solid var(--c-line);
 }
-.main-card-tag { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.main-card-tag {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
 .main-card-code { font-size: 13px; font-weight: 600; color: var(--c-text); letter-spacing: 0.01em; }
+.main-card-hex {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--c-text-muted);
+  font-family: ui-monospace, Consolas, monospace;
+  letter-spacing: 0.04em;
+}
+.main-card-active + .main-card-hex,
+.main-card-hex + .main-card-active { margin-left: 6px; }
 .main-card-active {
   margin-left: auto;
   font-size: 10px;

@@ -70,8 +70,13 @@ export default function MainGallery({ activeTheme, brand, setBrand, onTigerPrevi
                       )}
                     </span>
                     <span className="main-card-foot">
-                      <span className="main-card-tag" style={{ background: groupColour }} />
+                      <span
+                        className="main-card-tag"
+                        style={{ background: p.brand }}
+                        title={p.brand}
+                      />
                       <span className="main-card-code">{p.code || p.name}</span>
+                      <span className="main-card-hex">{p.brand.toUpperCase()}</span>
                       {active && <span className="main-card-active">✓</span>}
                     </span>
                   </button>
