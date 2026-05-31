@@ -3,6 +3,7 @@ import DesignPanel from "./components/DesignPanel";
 import MainGallery from "./components/MainGallery";
 import OrderModal from "./components/OrderModal";
 import PreviewOverlay from "./components/PreviewOverlay";
+import ThemeSelector from "./components/ThemeSelector";
 import { useConfig, TIGER_PRESETS } from "./hooks/useConfig";
 import "./App.css";
 
@@ -40,22 +41,10 @@ export default function App() {
         </div>
 
         <div className="app-topbar-middle">
-          <div className="theme-pill">
-            <button
-              type="button"
-              className={`theme-pill-btn ${config.activeTheme === "sky" ? "active" : ""}`}
-              onClick={() => config.setActiveTheme("sky")}
-            >
-              Sky
-            </button>
-            <button
-              type="button"
-              className={`theme-pill-btn ${config.activeTheme === "tiger" ? "active" : ""}`}
-              onClick={() => config.setActiveTheme("tiger")}
-            >
-              Tiger
-            </button>
-          </div>
+          <ThemeSelector
+            activeTheme={config.activeTheme}
+            setActiveTheme={config.setActiveTheme}
+          />
         </div>
 
         <div className="app-topbar-right">
