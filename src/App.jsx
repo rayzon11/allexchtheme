@@ -1,8 +1,8 @@
 import { useState } from "react";
-import ConfigPanel from "./components/ConfigPanel";
 import MainGallery from "./components/MainGallery";
 import OrderModal from "./components/OrderModal";
 import PreviewOverlay from "./components/PreviewOverlay";
+import SettingsDrawer from "./components/SettingsDrawer";
 import { useConfig, TIGER_PRESETS } from "./hooks/useConfig";
 import "./App.css";
 
@@ -10,6 +10,7 @@ export default function App() {
   const config = useConfig();
   const [orderOpen, setOrderOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const tigerVariantName = TIGER_PRESETS.find(
     (p) => p.brand.toLowerCase() === config.brand?.toLowerCase()
@@ -24,7 +25,7 @@ export default function App() {
     logoSize: config.logoSize,
     markSize: config.markSize,
     brand: config.brand,
-    activePage: config.activePage,
+    activePage: "home",
   };
 
   return (
@@ -34,31 +35,64 @@ export default function App() {
           <div className="app-mark">A</div>
           <div className="app-title">
             <strong>allexchtheme</strong>
-            <small>white-label theme designer</small>
+            <small>white-label theme gallery</small>
           </div>
         </div>
+
+        <div className="app-topbar-middle">
+          <div className="theme-pill">
+            <button
+              type="button"
+              className={`theme-pill-btn ${config.activeTheme === "sky" ? "active" : ""}`}
+              onClick={() => config.setActiveTheme("sky")}
+            >
+              Sky
+            </button>
+            <button
+              type="button"
+              className={`theme-pill-btn ${config.activeTheme === "tiger" ? "active" : ""}`}
+              onClick={() => config.setActiveTheme("tiger")}
+            >
+              Tiger
+            </button>
+          </div>
+        </div>
+
         <div className="app-topbar-right">
-          <button type="button" className="topbar-ghost" onClick={() => setOrderOpen(true)}>
-            🚀 Request this design
+          <button
+            type="button"
+            className="topbar-icon-btn"
+            onClick={() => setDrawerOpen(true)}
+            title="Customize design"
+            aria-label="Settings"
+          >
+            ⚙ <span className="topbar-icon-label">Customize</span>
+          </button>
+          <button
+            type="button"
+            className="topbar-ghost"
+            onClick={() => setOrderOpen(true)}
+          >
+            🚀 <span className="topbar-icon-label">Request</span>
           </button>
         </div>
       </header>
 
-      <div className="app-body">
-        <ConfigPanel
-          {...config}
-          onRequestDesign={() => setOrderOpen(true)}
+      <main className="app-canvas">
+        <MainGallery
+          activeTheme={config.activeTheme}
+          brand={config.brand}
+          setBrand={config.setBrand}
+          onTigerPreview={() => setPreviewOpen(true)}
         />
+      </main>
 
-        <main className="preview-pane">
-          <MainGallery
-            activeTheme={config.activeTheme}
-            brand={config.brand}
-            setBrand={config.setBrand}
-            onTigerPreview={() => setPreviewOpen(true)}
-          />
-        </main>
-      </div>
+      <SettingsDrawer
+        {...config}
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        onRequestDesign={() => setOrderOpen(true)}
+      />
 
       <PreviewOverlay
         isOpen={previewOpen}
