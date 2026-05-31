@@ -5,56 +5,72 @@ import { useCallback, useEffect, useState } from "react";
 export const SKY_DEFAULT_BRAND = "#474747"; // dark grey — same as the saved Sky header
 export const TIGER_DEFAULT_BRAND = "#cc0a00"; // red — same as the saved Tiger nav
 
-// Sky design shop — variants matched 1:1 to the Notion reference screenshots.
-// Each preset's brand hex is the EXACT pixel colour sampled from the header
-// strip of its preview screenshot. No estimates — pure pngjs reads.
+// Sky design shop — 20 variants pulled DIRECTLY from the boss's Notion
+// gallery via Notion's public API (queryCollection + syncRecordValuesMain).
+// Codes (Yl/Bu/Gn/Og/Pl/Rd/Wt) and group labels match Notion 1:1.
+// Brand hex is the exact pixel sampled from each variant's desktop header.
 //
-// Sampling: y=1..5, x=2..30 (far-left header strip, away from logos/menu).
-// Source of truth: public/shop/sky-v{1..21}.png (boss exported from Notion).
-//
-//   v1  #FFB600 Gold        v8  #F37335 Orange       v15 #01294B Navy
-//   v2  #FFE8A3 Cream       v9  #F1592A Tomato       v16 #400078 Deep Purple
-//   v3  #FFB600 Gold Alt    v10 #920000 Dark Red     v17 #694B92 Lavender
-//   v4  #03B44F Bright Grn  v11 #810000 Maroon       v18 #E4E4E4 Silver
-//   v5  #15805E Forest      v12 #36010B Wine         v19 #A5A5A5 Grey
-//   v6  #68C092 Mint        v13 #015BAB Royal Blue   v20 #E4E4E4 Silver Alt
-//   v7  #466D05 Olive       v14 #1466B0 Steel Blue   v21 #FFB600 Gold Alt 2
+// Each preset references its own per-variant assets so the swipe carousel
+// shows that variant's real mobile + login screenshots (not shared
+// fallbacks). For each code there are 6 files in /shop:
+//   sky-<code>-desktop.png             home (logged out, desktop)
+//   sky-<code>-desktop-login.png       login modal (desktop)
+//   sky-<code>-desktop-after-login.png home (logged in, desktop)
+//   sky-<code>-mobile.png              home (logged out, mobile)
+//   sky-<code>-mobile-login.png        login modal (mobile)
+//   sky-<code>-mobile-after-login.png  home (logged in, mobile)
 export const SKY_PRESETS = [
-  // ── YELLOW / GOLD ──
-  { code: "Yl01", name: "Classic Gold",  brand: "#ffb600", group: "Yellow", preview: "/shop/sky-v1.png"  },
-  { code: "Yl02", name: "Cream",         brand: "#ffe8a3", group: "Yellow", preview: "/shop/sky-v2.png"  },
-  { code: "Yl03", name: "Gold Alt",      brand: "#ffb600", group: "Yellow", preview: "/shop/sky-v3.png"  },
-  { code: "Yl04", name: "Gold Classic",  brand: "#ffb600", group: "Yellow", preview: "/shop/sky-v21.png" },
+  // ── YELLOW ──
+  { code: "Yl01", name: "Classic Gold",  brand: "#ffb600", group: "Yellow", preview: "/shop/sky-yl01-desktop.png" },
+  { code: "Yl02", name: "Cream",         brand: "#fae6b1", group: "Yellow", preview: "/shop/sky-yl02-desktop.png" },
+  { code: "Yl03", name: "Gold Alt",      brand: "#ffb600", group: "Yellow", preview: "/shop/sky-yl03-desktop.png" },
 
   // ── GREEN ──
-  { code: "Gn01", name: "Bright Green",  brand: "#03b44f", group: "Green",  preview: "/shop/sky-v4.png"  },
-  { code: "Gn02", name: "Forest",        brand: "#15805e", group: "Green",  preview: "/shop/sky-v5.png"  },
-  { code: "Gn03", name: "Mint",          brand: "#68c092", group: "Green",  preview: "/shop/sky-v6.png"  },
-  { code: "Gn04", name: "Olive",         brand: "#466d05", group: "Green",  preview: "/shop/sky-v7.png"  },
+  { code: "Gn01", name: "Bright Green",  brand: "#03b44f", group: "Green",  preview: "/shop/sky-gn01-desktop.png" },
+  { code: "Gn02", name: "Forest",        brand: "#15805e", group: "Green",  preview: "/shop/sky-gn02-desktop.png" },
+  { code: "Gn03", name: "Mint",          brand: "#68c092", group: "Green",  preview: "/shop/sky-gn03-desktop.png" },
+  { code: "Gn04", name: "Olive",         brand: "#486f05", group: "Green",  preview: "/shop/sky-gn04-desktop.png" },
 
   // ── ORANGE ──
-  { code: "Or01", name: "Orange",        brand: "#f37335", group: "Orange", preview: "/shop/sky-v8.png"  },
-  { code: "Or02", name: "Tomato",        brand: "#f1592a", group: "Orange", preview: "/shop/sky-v9.png"  },
+  { code: "Og01", name: "Orange",        brand: "#f37335", group: "Orange", preview: "/shop/sky-og01-desktop.png" },
+  { code: "Og02", name: "Tomato",        brand: "#f1592a", group: "Orange", preview: "/shop/sky-og02-desktop.png" },
 
   // ── RED ──
-  { code: "Rd01", name: "Dark Red",      brand: "#920000", group: "Red",    preview: "/shop/sky-v10.png" },
-  { code: "Rd02", name: "Maroon",        brand: "#810000", group: "Red",    preview: "/shop/sky-v11.png" },
-  { code: "Rd03", name: "Wine",          brand: "#36010b", group: "Red",    preview: "/shop/sky-v12.png" },
+  { code: "Rd01", name: "Dark Red",      brand: "#920000", group: "Red",    preview: "/shop/sky-rd01-desktop.png" },
+  { code: "Rd02", name: "Maroon",        brand: "#810000", group: "Red",    preview: "/shop/sky-rd02-desktop.png" },
+  { code: "Rd03", name: "Wine",          brand: "#36010b", group: "Red",    preview: "/shop/sky-rd03-desktop.png" },
 
   // ── BLUE ──
-  { code: "Bl01", name: "Royal Blue",    brand: "#015bab", group: "Blue",   preview: "/shop/sky-v13.png" },
-  { code: "Bl02", name: "Steel Blue",    brand: "#1466b0", group: "Blue",   preview: "/shop/sky-v14.png" },
-  { code: "Bl03", name: "Navy",          brand: "#01294b", group: "Blue",   preview: "/shop/sky-v15.png" },
+  { code: "Bu01", name: "Royal Blue",    brand: "#005dac", group: "Blue",   preview: "/shop/sky-bu01-desktop.png" },
+  { code: "Bu02", name: "Cobalt",        brand: "#005dac", group: "Blue",   preview: "/shop/sky-bu02-desktop.png" },
+  { code: "Bu03", name: "Navy",          brand: "#01294b", group: "Blue",   preview: "/shop/sky-bu03-desktop.png" },
 
   // ── PURPLE ──
-  { code: "Pp01", name: "Deep Purple",   brand: "#400078", group: "Purple", preview: "/shop/sky-v16.png" },
-  { code: "Pp02", name: "Lavender",      brand: "#694b92", group: "Purple", preview: "/shop/sky-v17.png" },
+  { code: "Pl01", name: "Deep Purple",   brand: "#400078", group: "Purple", preview: "/shop/sky-pl01-desktop.png" },
+  { code: "Pl02", name: "Lavender",      brand: "#6a4c93", group: "Purple", preview: "/shop/sky-pl02-desktop.png" },
 
-  // ── DARK / SILVER ──
-  { code: "Dk01", name: "Silver",        brand: "#e4e4e4", group: "Dark",   preview: "/shop/sky-v18.png" },
-  { code: "Dk02", name: "Grey",          brand: "#a5a5a5", group: "Dark",   preview: "/shop/sky-v19.png" },
-  { code: "Dk03", name: "Silver Alt",    brand: "#e4e4e4", group: "Dark",   preview: "/shop/sky-v20.png" },
+  // ── WHITE / SILVER ──
+  { code: "Wt01", name: "Silver",        brand: "#e4e4e4", group: "White",  preview: "/shop/sky-wt01-desktop.png" },
+  { code: "Wt02", name: "Grey",          brand: "#a5a5a5", group: "White",  preview: "/shop/sky-wt02-desktop.png" },
+  { code: "Wt03", name: "Pearl",         brand: "#e4e4e4", group: "White",  preview: "/shop/sky-wt03-desktop.png" },
 ];
+
+// Build the per-variant view set for the swipe carousel (DesignPanel reads this).
+// Each variant has 4 "before-login" + 2 "after-login" captures from Notion.
+export const SKY_VIEWS = Object.fromEntries(
+  SKY_PRESETS.map((p) => {
+    const code = p.code.toLowerCase();
+    const base = "/shop/sky-" + code;
+    return [p.code, {
+      desktopHome:        base + "-desktop.png",
+      desktopLogin:       base + "-desktop-login.png",
+      desktopAfterLogin:  base + "-desktop-after-login.png",
+      mobileHome:         base + "-mobile.png",
+      mobileLogin:        base + "-mobile-login.png",
+      mobileAfterLogin:   base + "-mobile-after-login.png",
+    }];
+  })
+);
 
 // Colour swatch beside each group header (matches the Notion pill tag).
 export const SKY_GROUP_COLOURS = {
@@ -64,17 +80,21 @@ export const SKY_GROUP_COLOURS = {
   Red: "#ef4444",
   Blue: "#3b82f6",
   Purple: "#a855f7",
-  Dark: "#475569",
+  White: "#94a3b8",
 };
 
 // Shared screenshots reused for every Sky variant's secondary views.
 // The boss exported these from the saved HTML — they're the actual mobile/login
 // captures and look the same across colour variants (the body content differs,
 // the chrome colour is what the variant changes).
-export const SKY_VIEWS_FALLBACK = {
-  loginDesktop: "/shop/sky-login-desktop.png",
-  homeMobile: "/shop/sky-mobile-home.png",
-  loginMobile: "/shop/sky-mobile-login.png",
+// Kept for backward-compatibility — picks Yl01's assets as the fallback set
+// if a component still reads from the old name. Real per-variant captures live
+// in SKY_VIEWS above (keyed by preset code).
+export const SKY_VIEWS_FALLBACK = SKY_VIEWS.Yl01 || {
+  desktopHome: "/shop/sky-yl01-desktop.png",
+  desktopLogin: "/shop/sky-yl01-desktop-login.png",
+  mobileHome: "/shop/sky-yl01-mobile.png",
+  mobileLogin: "/shop/sky-yl01-mobile-login.png",
 };
 
 // Theme catalog — the product picker scales to any number of entries by reading
@@ -95,7 +115,7 @@ export const THEMES = [
     name: "Sky Exchange",
     tagline: "Iconic gold + dark exchange UI",
     category: "Exchange",
-    cover: "/shop/sky-v1.png",
+    cover: "/shop/sky-yl01-desktop.png",
     live: true,
   },
   {
@@ -103,7 +123,7 @@ export const THEMES = [
     name: "Tiger Exch",
     tagline: "Materialize-style red exchange",
     category: "Exchange",
-    cover: "/shop/sky-v11.png",
+    cover: "/shop/sky-rd01-desktop.png",
     live: true,
   },
 

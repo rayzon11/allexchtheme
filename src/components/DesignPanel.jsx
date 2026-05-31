@@ -3,7 +3,7 @@ import LogoUpload from "./LogoUpload";
 import {
   SKY_PRESETS,
   TIGER_PRESETS,
-  SKY_VIEWS_FALLBACK,
+  SKY_VIEWS,
   isValidHex,
   normaliseHex,
 } from "../hooks/useConfig";
@@ -77,12 +77,15 @@ export default function DesignPanel({
 
   const slides = useMemo(() => {
     if (!variant || !isSky) return [];
+    const views = SKY_VIEWS[variant.code] || {};
     return [
-      { kind: "desktop", label: "Desktop · Home", src: variant.preview },
-      { kind: "desktop", label: "Desktop · Login", src: SKY_VIEWS_FALLBACK.loginDesktop },
-      { kind: "mobile",  label: "Mobile · Home",  src: SKY_VIEWS_FALLBACK.homeMobile },
-      { kind: "mobile",  label: "Mobile · Login", src: SKY_VIEWS_FALLBACK.loginMobile },
-    ];
+      { kind: "desktop", label: "Desktop · Home",        src: views.desktopHome       || variant.preview },
+      { kind: "desktop", label: "Desktop · Login",       src: views.desktopLogin },
+      { kind: "desktop", label: "Desktop · After login", src: views.desktopAfterLogin },
+      { kind: "mobile",  label: "Mobile · Home",         src: views.mobileHome },
+      { kind: "mobile",  label: "Mobile · Login",        src: views.mobileLogin },
+      { kind: "mobile",  label: "Mobile · After login",  src: views.mobileAfterLogin },
+    ].filter((s) => s.src);
   }, [variant, isSky]);
 
   return (
