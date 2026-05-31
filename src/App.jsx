@@ -10,19 +10,10 @@ export default function App() {
   const config = useConfig();
   const [orderOpen, setOrderOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [domain, setDomain] = useState("");
-  const [domainHistory, setDomainHistory] = useState([]);
 
   const tigerVariantName = TIGER_PRESETS.find(
     (p) => p.brand.toLowerCase() === config.brand?.toLowerCase()
   )?.name;
-
-  const addDomainHistory = (entry) => {
-    setDomainHistory((prev) => {
-      const filtered = prev.filter((p) => p.domain !== entry.domain);
-      return [entry, ...filtered].slice(0, 8);
-    });
-  };
 
   const themeProps = {
     siteName: config.siteName,
@@ -56,12 +47,7 @@ export default function App() {
       <div className="app-body">
         <ConfigPanel
           {...config}
-          domain={domain}
-          setDomain={setDomain}
-          domainHistory={domainHistory}
-          addDomainHistory={addDomainHistory}
           onRequestDesign={() => setOrderOpen(true)}
-          onOpenPreview={() => setPreviewOpen(true)}
         />
 
         <main className="preview-pane">
@@ -85,11 +71,9 @@ export default function App() {
         isOpen={orderOpen}
         onClose={() => setOrderOpen(false)}
         activeTheme={config.activeTheme}
-        activePage={config.activePage}
         siteName={config.siteName}
         logoSrc={config.logoSrc}
         brand={config.brand}
-        domain={domain}
       />
     </div>
   );

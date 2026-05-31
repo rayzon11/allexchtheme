@@ -1,18 +1,6 @@
 import { useEffect, useState } from "react";
 import LogoUpload from "./LogoUpload";
-import DomainCheck from "./DomainCheck";
 import { isValidHex, normaliseHex } from "../hooks/useConfig";
-
-// Mini helper used by the shop cards to render the second gradient stop.
-function darkenHex(hex, amt = 0.35) {
-  const m = /^#([0-9a-f]{6})$/i.exec(hex || "");
-  if (!m) return hex;
-  const n = parseInt(m[1], 16);
-  const r = Math.round((n >> 16) * (1 - amt));
-  const g = Math.round(((n >> 8) & 0xff) * (1 - amt));
-  const b = Math.round((n & 0xff) * (1 - amt));
-  return "#" + [r, g, b].map((c) => c.toString(16).padStart(2, "0")).join("");
-}
 
 function BrandRow({ value, onChange }) {
   const [draft, setDraft] = useState(value);
@@ -55,10 +43,6 @@ function BrandRow({ value, onChange }) {
 export default function ConfigPanel({
   activeTheme,
   setActiveTheme,
-  activePage,
-  setActivePage,
-  deviceMode,
-  setDeviceMode,
   siteName,
   setSiteName,
   brand,
@@ -81,12 +65,7 @@ export default function ConfigPanel({
   markSize,
   setLogoSize,
   setMarkSize,
-  domain,
-  setDomain,
-  domainHistory,
-  addDomainHistory,
   onRequestDesign,
-  onOpenPreview,
 }) {
   const isSky = activeTheme === "sky";
 
@@ -108,46 +87,6 @@ export default function ConfigPanel({
             onClick={() => setActiveTheme("tiger")}
           >
             TIGER<br />EXCH
-          </button>
-        </div>
-      </div>
-
-      <div className="config-section">
-        <div className="config-section-title">Page</div>
-        <div className="page-switcher">
-          <button
-            type="button"
-            className={`page-btn ${activePage === "home" ? "active" : ""}`}
-            onClick={() => setActivePage("home")}
-          >
-            🏠 Home
-          </button>
-          <button
-            type="button"
-            className={`page-btn ${activePage === "login" ? "active" : ""}`}
-            onClick={() => setActivePage("login")}
-          >
-            🔐 Login
-          </button>
-        </div>
-      </div>
-
-      <div className="config-section">
-        <div className="config-section-title">Device</div>
-        <div className="page-switcher">
-          <button
-            type="button"
-            className={`page-btn ${deviceMode === "desktop" ? "active" : ""}`}
-            onClick={() => setDeviceMode("desktop")}
-          >
-            🖥️ Desktop
-          </button>
-          <button
-            type="button"
-            className={`page-btn ${deviceMode === "mobile" ? "active" : ""}`}
-            onClick={() => setDeviceMode("mobile")}
-          >
-            📱 Mobile
           </button>
         </div>
       </div>
@@ -206,22 +145,9 @@ export default function ConfigPanel({
         <BrandRow value={brand} onChange={setBrand} />
       </div>
 
-
-      <div className="config-section">
-        <div className="config-section-title">Domain Availability</div>
-        <DomainCheck
-          value={domain}
-          onChange={setDomain}
-          onUseAsName={setSiteName}
-          siteName={siteName}
-          history={domainHistory}
-          addHistory={addDomainHistory}
-        />
-      </div>
-
-      <div className="config-section" style={{ borderBottom: "none", paddingBottom: 28 }}>
+      <div className="config-section config-actions">
         <button type="button" className="reset-btn" onClick={resetBrand}>
-          ↺ Reset to Default
+          ↺ Reset
         </button>
         <button type="button" className="request-btn" onClick={onRequestDesign}>
           🚀 Request This Design

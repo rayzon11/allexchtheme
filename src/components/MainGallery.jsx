@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import {
   SKY_PRESETS,
   TIGER_PRESETS,
@@ -7,14 +7,14 @@ import {
 } from "../hooks/useConfig";
 
 /**
- * One-page Notion-style gallery. Top hero is a swipeable carousel showing every
- * view of the currently-selected variant — desktop home, desktop login, mobile
- * home, mobile login — using the boss's saved HTML screenshots. The cards
- * below switch which variant is in the hero. No modals, no page jumps.
+ * One-page gallery. Click any card → an inline drawer slides open BELOW that
+ * card showing the 4 views (desktop home/login + mobile home/login) as a
+ * horizontal swipeable carousel. No page jump, no modal — the preview appears
+ * where the customer clicked.
  */
 export default function MainGallery({ activeTheme, brand, setBrand, onTigerPreview }) {
   const isSky = activeTheme === "sky";
-  const scrollerRef = useRef(null);
+  const [openCode, setOpenCode] = useState(null);
 
   const groups = useMemo(() => {
     if (isSky) {
@@ -26,33 +26,24 @@ export default function MainGallery({ activeTheme, brand, setBrand, onTigerPrevi
     return [{ group: "Tiger", items: TIGER_PRESETS }];
   }, [isSky]);
 
-  const activeVariant = useMemo(() => {
-    const list = isSky ? SKY_PRESETS : TIGER_PRESETS;
-    return list.find((p) => p.brand.toLowerCase() === brand?.toLowerCase()) || list[0];
-  }, [isSky, brand]);
+  const slidesFor = (p) => {
+    if (!isSky) return [];
+    return [
+      { kind: "desktop", label: "Desktop · Home", src: p.preview },
+      { kind: "desktop", label: "Desktop · Login", src: SKY_VIEWS_FALLBACK.loginDesktop },
+      { kind: "mobile",  label: "Mobile · Home",  src: SKY_VIEWS_FALLBACK.homeMobile },
+      { kind: "mobile",  label: "Mobile · Login", src: SKY_VIEWS_FALLBACK.loginMobile },
+    ];
+  };
 
-  const slides = useMemo(() => {
-    if (!activeVariant) return [];
-    if (isSky) {
-      return [
-        { kind: "desktop", label: "Desktop · Home", src: activeVariant.preview },
-        { kind: "desktop", label: "Desktop · Login", src: SKY_VIEWS_FALLBACK.loginDesktop },
-        { kind: "mobile",  label: "Mobile · Home",  src: SKY_VIEWS_FALLBACK.homeMobile },
-        { kind: "mobile",  label: "Mobile · Login", src: SKY_VIEWS_FALLBACK.loginMobile },
-      ];
+  const handleCardClick = (p) => {
+    const key = p.code || p.name;
+    setBrand(p.brand);
+    if (!isSky) {
+      onTigerPreview?.();
+      return;
     }
-    return [{ kind: "tiger", label: "Tiger · Live preview", src: null }];
-  }, [activeVariant, isSky]);
-
-  // Reset scroll position to the start when the active variant changes.
-  useEffect(() => {
-    scrollerRef.current?.scrollTo({ left: 0, behavior: "smooth" });
-  }, [activeVariant?.code, activeVariant?.name]);
-
-  const scrollBy = (dir) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: "smooth" });
+    setOpenCode((cur) => (cur === key ? null : key));
   };
 
   return (
@@ -60,7 +51,7 @@ export default function MainGallery({ activeTheme, brand, setBrand, onTigerPrevi
       <header className="gallery-page-head">
         <div>
           <h1>{isSky ? "Sky Theme" : "Tiger Theme"}</h1>
-          <p>Swipe through every view, then pick a variant below to switch the design.</p>
+          <p>Pick a design — its full preview slides open right where you click.</p>
         </div>
         <div className="gallery-page-pill">
           <span className="gallery-page-pill-dot" />
@@ -68,52 +59,6 @@ export default function MainGallery({ activeTheme, brand, setBrand, onTigerPrevi
         </div>
       </header>
 
-      {/* HERO swipeable viewer */}
-      <section className="hero-viewer">
-        <div className="hero-viewer-head">
-          <div className="hero-variant-tag">
-            <span className="hero-variant-code" style={{ background: activeVariant?.brand }}>
-              {activeVariant?.code || activeVariant?.name}
-            </span>
-            <strong>{activeVariant?.name}</strong>
-            {activeVariant?.group && <span className="hero-variant-group">{activeVariant.group}</span>}
-          </div>
-          <div className="hero-controls">
-            <button type="button" className="hero-arrow" onClick={() => scrollBy(-1)} aria-label="Previous view">‹</button>
-            <button type="button" className="hero-arrow" onClick={() => scrollBy(1)} aria-label="Next view">›</button>
-            {!isSky && (
-              <button type="button" className="hero-open-tiger" onClick={onTigerPreview}>
-                Open live preview
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div className="hero-scroller" ref={scrollerRef}>
-          {slides.map((s, i) => (
-            <figure key={`${activeVariant?.code || activeVariant?.name}-${i}`} className={`hero-slide hero-slide-${s.kind}`}>
-              <figcaption>{s.label}</figcaption>
-              <div className="hero-slide-frame">
-                {s.src ? (
-                  <img src={s.src} alt={s.label} />
-                ) : (
-                  <div className="hero-slide-empty">
-                    Click <em>"Open live preview"</em> to see the Tiger variant rendered live.
-                  </div>
-                )}
-              </div>
-            </figure>
-          ))}
-        </div>
-
-        <div className="hero-dots">
-          {slides.map((s, i) => (
-            <span key={i} className="hero-dot">{s.label.split(" · ")[1] || s.kind}</span>
-          ))}
-        </div>
-      </section>
-
-      {/* GALLERY groups */}
       {groups.map(({ group, items }) => {
         const groupColour = isSky ? SKY_GROUP_COLOURS[group] : "#cc0a00";
         return (
@@ -126,34 +71,74 @@ export default function MainGallery({ activeTheme, brand, setBrand, onTigerPrevi
             </header>
             <div className="main-grid">
               {items.map((p) => {
+                const key = p.code || p.name;
                 const active = p.brand.toLowerCase() === brand?.toLowerCase();
+                const open = isSky && openCode === key;
                 return (
-                  <button
-                    key={p.code || p.name}
-                    type="button"
-                    className={`main-card${active ? " active" : ""}`}
-                    onClick={() => setBrand(p.brand)}
-                    title={p.code ? `${p.code} ${p.name}` : p.name}
-                  >
-                    <span className="main-card-preview">
-                      {p.preview ? (
-                        <img src={p.preview} alt={p.name} />
-                      ) : (
-                        <span className="main-card-mock" style={{ background: p.brand }} />
-                      )}
-                    </span>
-                    <span className="main-card-foot">
-                      <span className="main-card-tag" style={{ background: groupColour }} />
-                      <span className="main-card-code">{p.code || p.name}</span>
-                      {active && <span className="main-card-active">✓ Selected</span>}
-                    </span>
-                  </button>
+                  <Fragment key={key}>
+                    <button
+                      type="button"
+                      className={`main-card${active ? " active" : ""}${open ? " open" : ""}`}
+                      onClick={() => handleCardClick(p)}
+                      title={p.code ? `${p.code} ${p.name}` : p.name}
+                    >
+                      <span className="main-card-preview">
+                        {p.preview ? (
+                          <img src={p.preview} alt={p.name} />
+                        ) : (
+                          <span className="main-card-mock" style={{ background: p.brand }} />
+                        )}
+                      </span>
+                      <span className="main-card-foot">
+                        <span className="main-card-tag" style={{ background: groupColour }} />
+                        <span className="main-card-code">{p.code || p.name}</span>
+                        {open && <span className="main-card-chev">▾</span>}
+                        {active && !open && <span className="main-card-active">✓</span>}
+                      </span>
+                    </button>
+
+                    {open && (
+                      <InlineViewer
+                        variant={p}
+                        groupColour={groupColour}
+                        slides={slidesFor(p)}
+                        onClose={() => setOpenCode(null)}
+                      />
+                    )}
+                  </Fragment>
                 );
               })}
             </div>
           </section>
         );
       })}
+    </div>
+  );
+}
+
+function InlineViewer({ variant, groupColour, slides, onClose }) {
+  return (
+    <div className="inline-viewer" style={{ "--variant-c": variant.brand, "--group-c": groupColour }}>
+      <header className="inline-viewer-head">
+        <div className="inline-viewer-title">
+          <span className="inline-viewer-code" style={{ background: variant.brand }}>
+            {variant.code || variant.name}
+          </span>
+          <strong>{variant.name}</strong>
+          {variant.group && <span className="inline-viewer-group">{variant.group}</span>}
+        </div>
+        <button type="button" className="inline-viewer-close" onClick={onClose} aria-label="Close">✕</button>
+      </header>
+      <div className="inline-viewer-scroller">
+        {slides.map((s, i) => (
+          <figure key={i} className={`inline-slide inline-slide-${s.kind}`}>
+            <figcaption>{s.label}</figcaption>
+            <div className="inline-slide-frame">
+              <img src={s.src} alt={s.label} />
+            </div>
+          </figure>
+        ))}
+      </div>
     </div>
   );
 }
