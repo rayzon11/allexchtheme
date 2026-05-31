@@ -1,10 +1,8 @@
 import { useState } from "react";
 import ConfigPanel from "./components/ConfigPanel";
+import MainGallery from "./components/MainGallery";
 import OrderModal from "./components/OrderModal";
 import PreviewOverlay from "./components/PreviewOverlay";
-import SkyScreenshotPreview from "./components/SkyScreenshotPreview";
-import SkyExchangeTheme from "./components/themes/SkyExchangeTheme";
-import TigerExchTheme from "./components/themes/TigerExchTheme";
 import { useConfig, TIGER_PRESETS } from "./hooks/useConfig";
 import "./App.css";
 
@@ -38,11 +36,6 @@ export default function App() {
     activePage: config.activePage,
   };
 
-  // Sky home view: show the selected variant's saved screenshot, not the iframe.
-  // Sky login + Tiger (both pages): use the iframe so brand + logo customizations
-  // still flow through.
-  const showSkyScreenshot = config.activeTheme === "sky" && config.activePage === "home";
-
   return (
     <div className="app-shell">
       <header className="app-topbar">
@@ -71,18 +64,13 @@ export default function App() {
           onOpenPreview={() => setPreviewOpen(true)}
         />
 
-        <main className={`preview-pane device-${config.deviceMode}`}>
-          {showSkyScreenshot ? (
-            <SkyScreenshotPreview
-              brand={config.brand}
-              deviceMode={config.deviceMode}
-              siteName={config.siteName}
-            />
-          ) : config.activeTheme === "sky" ? (
-            <SkyExchangeTheme {...themeProps} />
-          ) : (
-            <TigerExchTheme {...themeProps} />
-          )}
+        <main className="preview-pane">
+          <MainGallery
+            activeTheme={config.activeTheme}
+            brand={config.brand}
+            setBrand={config.setBrand}
+            onTigerPreview={() => setPreviewOpen(true)}
+          />
         </main>
       </div>
 
