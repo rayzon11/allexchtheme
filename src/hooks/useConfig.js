@@ -5,54 +5,53 @@ import { useCallback, useEffect, useState } from "react";
 export const SKY_DEFAULT_BRAND = "#474747"; // dark grey — same as the saved Sky header
 export const TIGER_DEFAULT_BRAND = "#cc0a00"; // red — same as the saved Tiger nav
 
-// Sky design shop — 20 variants pulled DIRECTLY from the boss's Notion
-// gallery via Notion's public API (queryCollection + syncRecordValuesMain).
-// Codes (Yl/Bu/Gn/Og/Pl/Rd/Wt) and group labels match Notion 1:1.
-// Brand hex is the exact pixel sampled from each variant's desktop header.
+// Sky design shop — 20 variants imported DIRECTLY from the boss's Notion
+// gallery. Both `brand` (primary) and `accent` (secondary) hex codes are
+// the EXACT values typed into each variant's "Main Color" section on
+// Notion (parsed from the `\colorbox{#XXXXXX}` decorations in the page).
+// No guesses, no eyeballing — these are the boss's own values.
 //
-// Each preset references its own per-variant assets so the swipe carousel
-// shows that variant's real mobile + login screenshots (not shared
-// fallbacks). For each code there are 6 files in /shop:
-//   sky-<code>-desktop.png             home (logged out, desktop)
-//   sky-<code>-desktop-login.png       login modal (desktop)
-//   sky-<code>-desktop-after-login.png home (logged in, desktop)
-//   sky-<code>-mobile.png              home (logged out, mobile)
-//   sky-<code>-mobile-login.png        login modal (mobile)
-//   sky-<code>-mobile-after-login.png  home (logged in, mobile)
+// Each preset has 6 per-variant captures in /shop:
+//   sky-<code>-desktop.png              home (logged out, desktop)
+//   sky-<code>-desktop-login.png        login modal (desktop)
+//   sky-<code>-desktop-after-login.png  home (logged in, desktop)
+//   sky-<code>-mobile.png               home (logged out, mobile)
+//   sky-<code>-mobile-login.png         login modal (mobile)
+//   sky-<code>-mobile-after-login.png   home (logged in, mobile)
 export const SKY_PRESETS = [
   // ── YELLOW ──
-  { code: "Yl01", name: "Classic Gold",  brand: "#ffb600", group: "Yellow", preview: "/shop/sky-yl01-desktop.png" },
-  { code: "Yl02", name: "Cream",         brand: "#fae6b1", group: "Yellow", preview: "/shop/sky-yl02-desktop.png" },
-  { code: "Yl03", name: "Gold Alt",      brand: "#ffb600", group: "Yellow", preview: "/shop/sky-yl03-desktop.png" },
+  { code: "Yl01", name: "Classic Gold",  brand: "#FFB600", accent: "#68C092", group: "Yellow", preview: "/shop/sky-yl01-desktop.png" },
+  { code: "Yl02", name: "Cream",         brand: "#FFE8A3", accent: "#68C092", group: "Yellow", preview: "/shop/sky-yl02-desktop.png" },
+  { code: "Yl03", name: "Gold Navy",     brand: "#FFB600", accent: "#1D3557", group: "Yellow", preview: "/shop/sky-yl03-desktop.png" },
 
   // ── GREEN ──
-  { code: "Gn01", name: "Bright Green",  brand: "#03b44f", group: "Green",  preview: "/shop/sky-gn01-desktop.png" },
-  { code: "Gn02", name: "Forest",        brand: "#15805e", group: "Green",  preview: "/shop/sky-gn02-desktop.png" },
-  { code: "Gn03", name: "Mint",          brand: "#68c092", group: "Green",  preview: "/shop/sky-gn03-desktop.png" },
-  { code: "Gn04", name: "Olive",         brand: "#486f05", group: "Green",  preview: "/shop/sky-gn04-desktop.png" },
+  { code: "Gn01", name: "Bright Green",  brand: "#03B44F", accent: "#307234", group: "Green",  preview: "/shop/sky-gn01-desktop.png" },
+  { code: "Gn02", name: "Forest",        brand: "#15805E", accent: "#343A40", group: "Green",  preview: "/shop/sky-gn02-desktop.png" },
+  { code: "Gn03", name: "Mint",          brand: "#68C092", accent: "#588157", group: "Green",  preview: "/shop/sky-gn03-desktop.png" },
+  { code: "Gn04", name: "Olive Gold",    brand: "#486F05", accent: "#FFB600", group: "Green",  preview: "/shop/sky-gn04-desktop.png" },
 
   // ── ORANGE ──
-  { code: "Og01", name: "Orange",        brand: "#f37335", group: "Orange", preview: "/shop/sky-og01-desktop.png" },
-  { code: "Og02", name: "Tomato",        brand: "#f1592a", group: "Orange", preview: "/shop/sky-og02-desktop.png" },
+  { code: "Og01", name: "Orange",        brand: "#F37335", accent: "#6C757D", group: "Orange", preview: "/shop/sky-og01-desktop.png" },
+  { code: "Og02", name: "Tomato Blue",   brand: "#F1592A", accent: "#066BC1", group: "Orange", preview: "/shop/sky-og02-desktop.png" },
 
   // ── RED ──
-  { code: "Rd01", name: "Dark Red",      brand: "#920000", group: "Red",    preview: "/shop/sky-rd01-desktop.png" },
-  { code: "Rd02", name: "Maroon",        brand: "#810000", group: "Red",    preview: "/shop/sky-rd02-desktop.png" },
-  { code: "Rd03", name: "Wine",          brand: "#36010b", group: "Red",    preview: "/shop/sky-rd03-desktop.png" },
+  { code: "Rd01", name: "Dark Red",      brand: "#920000", accent: "#000000", group: "Red",    preview: "/shop/sky-rd01-desktop.png" },
+  { code: "Rd02", name: "Maroon Gold",   brand: "#810000", accent: "#D4AF37", group: "Red",    preview: "/shop/sky-rd02-desktop.png" },
+  { code: "Rd03", name: "Wine",          brand: "#36010B", accent: "#9B001D", group: "Red",    preview: "/shop/sky-rd03-desktop.png" },
 
   // ── BLUE ──
-  { code: "Bu01", name: "Royal Blue",    brand: "#005dac", group: "Blue",   preview: "/shop/sky-bu01-desktop.png" },
-  { code: "Bu02", name: "Cobalt",        brand: "#005dac", group: "Blue",   preview: "/shop/sky-bu02-desktop.png" },
-  { code: "Bu03", name: "Navy",          brand: "#01294b", group: "Blue",   preview: "/shop/sky-bu03-desktop.png" },
+  { code: "Bu01", name: "Royal Blue",    brand: "#005DAC", accent: "#00C2FF", group: "Blue",   preview: "/shop/sky-bu01-desktop.png" },
+  { code: "Bu02", name: "Cobalt Sky",    brand: "#005DAC", accent: "#E6F0FA", group: "Blue",   preview: "/shop/sky-bu02-desktop.png" },
+  { code: "Bu03", name: "Navy Gold",     brand: "#01294B", accent: "#D4AF37", group: "Blue",   preview: "/shop/sky-bu03-desktop.png" },
 
   // ── PURPLE ──
-  { code: "Pl01", name: "Deep Purple",   brand: "#400078", group: "Purple", preview: "/shop/sky-pl01-desktop.png" },
-  { code: "Pl02", name: "Lavender",      brand: "#6a4c93", group: "Purple", preview: "/shop/sky-pl02-desktop.png" },
+  { code: "Pl01", name: "Deep Purple",   brand: "#400078", accent: "#DD8543", group: "Purple", preview: "/shop/sky-pl01-desktop.png" },
+  { code: "Pl02", name: "Lavender",      brand: "#6A4C93", accent: "#400078", group: "Purple", preview: "/shop/sky-pl02-desktop.png" },
 
   // ── WHITE / SILVER ──
-  { code: "Wt01", name: "Silver",        brand: "#e4e4e4", group: "White",  preview: "/shop/sky-wt01-desktop.png" },
-  { code: "Wt02", name: "Grey",          brand: "#a5a5a5", group: "White",  preview: "/shop/sky-wt02-desktop.png" },
-  { code: "Wt03", name: "Pearl",         brand: "#e4e4e4", group: "White",  preview: "/shop/sky-wt03-desktop.png" },
+  { code: "Wt01", name: "Silver Navy",   brand: "#E4E4E4", accent: "#1D3558", group: "White",  preview: "/shop/sky-wt01-desktop.png" },
+  { code: "Wt02", name: "Steel Grey",    brand: "#A5A5A5", accent: "#6182B7", group: "White",  preview: "/shop/sky-wt02-desktop.png" },
+  { code: "Wt03", name: "Pearl Slate",   brand: "#E4E4E4", accent: "#1B303B", group: "White",  preview: "/shop/sky-wt03-desktop.png" },
 ];
 
 // Build the per-variant view set for the swipe carousel (DesignPanel reads this).
