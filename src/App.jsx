@@ -2,7 +2,7 @@ import { useState } from "react";
 import MainGallery from "./components/MainGallery";
 import OrderModal from "./components/OrderModal";
 import PreviewOverlay from "./components/PreviewOverlay";
-import SettingsDrawer from "./components/SettingsDrawer";
+import SettingsPanel from "./components/SettingsPanel";
 import { useConfig, TIGER_PRESETS } from "./hooks/useConfig";
 import "./App.css";
 
@@ -10,7 +10,7 @@ export default function App() {
   const config = useConfig();
   const [orderOpen, setOrderOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [mobileSettingsOpen, setMobileSettingsOpen] = useState(false);
 
   const tigerVariantName = TIGER_PRESETS.find(
     (p) => p.brand.toLowerCase() === config.brand?.toLowerCase()
@@ -61,10 +61,9 @@ export default function App() {
         <div className="app-topbar-right">
           <button
             type="button"
-            className="topbar-icon-btn"
-            onClick={() => setDrawerOpen(true)}
-            title="Customize design"
-            aria-label="Settings"
+            className="topbar-icon-btn mobile-settings-btn"
+            onClick={() => setMobileSettingsOpen((v) => !v)}
+            aria-label="Toggle settings"
           >
             ⚙ <span className="topbar-icon-label">Customize</span>
           </button>
@@ -78,21 +77,23 @@ export default function App() {
         </div>
       </header>
 
-      <main className="app-canvas">
-        <MainGallery
-          activeTheme={config.activeTheme}
-          brand={config.brand}
-          setBrand={config.setBrand}
-          onTigerPreview={() => setPreviewOpen(true)}
-        />
-      </main>
+      <div className="app-workspace">
+        <main className="app-canvas">
+          <MainGallery
+            activeTheme={config.activeTheme}
+            brand={config.brand}
+            setBrand={config.setBrand}
+            onTigerPreview={() => setPreviewOpen(true)}
+          />
+        </main>
 
-      <SettingsDrawer
-        {...config}
-        isOpen={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        onRequestDesign={() => setOrderOpen(true)}
-      />
+        <SettingsPanel
+          {...config}
+          onRequestDesign={() => setOrderOpen(true)}
+          mobileOpen={mobileSettingsOpen}
+          onMobileToggle={() => setMobileSettingsOpen((v) => !v)}
+        />
+      </div>
 
       <PreviewOverlay
         isOpen={previewOpen}
