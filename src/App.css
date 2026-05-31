@@ -1150,11 +1150,64 @@ body {
 }
 
 /* ============================================
-   RESPONSIVE — phone (design panel becomes bottom sheet)
+   RESPONSIVE — phone (design panel becomes native bottom sheet)
    ============================================ */
+.design-drag-handle { display: none; }
+.design-head-thumb,
+.design-head-text { display: flex; }
+.design-head-thumb {
+  position: relative;
+  width: 52px;
+  height: 36px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--c-bg-3);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+.design-head-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+.design-head-mock { width: 100%; height: 100%; display: block; }
+.design-head-code-overlay {
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  padding: 1px 5px;
+  background: var(--c-accent);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  border-radius: 3px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+.design-head-text { flex-direction: column; min-width: 0; }
+
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 18, 16, 0);
+  z-index: 70;
+  pointer-events: none;
+  transition: background 0.25s ease;
+  display: none;
+}
+
 @media (max-width: 820px) {
   .mobile-settings-btn { display: inline-flex; }
   .app-workspace { grid-template-columns: 1fr; }
+
+  .sheet-backdrop { display: block; }
+  .sheet-backdrop.open {
+    background: rgba(20, 18, 16, 0.55);
+    pointer-events: auto;
+    backdrop-filter: blur(4px);
+  }
 
   .design-panel {
     position: fixed;
@@ -1162,22 +1215,87 @@ body {
     right: 0;
     bottom: 0;
     top: auto;
-    height: 70px;
+    height: 68px;
     border-left: 0;
     border-top: 1px solid var(--c-line);
-    box-shadow: 0 -16px 32px rgba(0, 0, 0, 0.45);
-    transition: height 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -18px 36px rgba(0, 0, 0, 0.5);
+    transition: height 0.32s cubic-bezier(0.32, 0.72, 0, 1);
     z-index: 80;
+    background: var(--c-bg-1);
   }
-  .design-panel.mobile-open { height: 88vh; }
+  .design-panel.mobile-open { height: 92vh; }
+
+  .design-drag-handle {
+    display: grid;
+    place-items: center;
+    height: 18px;
+    width: 100%;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding-top: 6px;
+  }
+  .design-drag-handle span {
+    display: block;
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--c-line-strong);
+  }
+  .design-panel.mobile-open .design-drag-handle span { background: var(--c-accent); }
+
+  .design-head {
+    flex: 0 0 50px;
+    padding: 0 14px;
+    background: transparent;
+    cursor: pointer;
+  }
+  .design-head-left { gap: 10px; min-width: 0; }
+  .design-head-left strong { font-size: 14px; }
+  .design-head-left small { font-size: 11px; }
   .design-mobile-toggle { display: grid; place-items: center; }
+
   .design-body { display: none; }
-  .design-panel.mobile-open .design-body { display: flex; }
+  .design-panel.mobile-open .design-body { display: flex; padding-bottom: 8px; }
+
   .design-foot { display: none; }
-  .design-panel.mobile-open .design-foot { display: block; }
-  .design-slide-desktop { width: 70vw; max-width: 320px; }
-  .design-slide-mobile { width: 38vw; max-width: 180px; }
-  .app-canvas { padding-bottom: 90px; }
+  .design-panel.mobile-open .design-foot {
+    display: block;
+    position: sticky;
+    bottom: 0;
+    padding: 12px 16px env(safe-area-inset-bottom, 12px);
+  }
+
+  /* PREVIEW on mobile — full-bleed scroller, larger touch target */
+  .design-preview { padding: 6px 14px 12px; }
+  .design-slide-desktop { width: 84vw; max-width: 360px; }
+  .design-slide-mobile { width: 56vw; max-width: 220px; }
+  .design-slide figcaption { font-size: 11px; }
+  .design-preview-hint { font-size: 11px; padding-top: 4px; }
+
+  /* CUSTOMIZE on mobile — taller sections, bigger inputs */
+  .design-section-title { padding: 16px 16px 4px; font-size: 13px; }
+  .config-section { padding: 14px 16px; }
+  .site-name-input,
+  .hex-input { height: 44px; font-size: 14px; padding: 0 14px; }
+  .brand-swatch { width: 44px; height: 44px; }
+  .reset-btn { height: 42px; font-size: 13px; }
+  .request-btn { height: 50px; font-size: 14px; border-radius: 10px; }
+
+  /* LogoUpload mobile sizing */
+  .logo-upload-zone { min-height: 72px; font-size: 13px; padding: 14px; }
+  .demo-logo { height: 52px; }
+
+  .app-canvas { padding-bottom: 88px; }
+}
+
+@media (max-width: 540px) {
+  .design-slide-desktop { width: 82vw; }
+  .design-slide-mobile { width: 50vw; }
+  .design-head-thumb { width: 44px; height: 30px; }
+  .design-head-code-overlay { font-size: 8px; padding: 1px 4px; }
 }
 
 @media (max-width: 720px) {

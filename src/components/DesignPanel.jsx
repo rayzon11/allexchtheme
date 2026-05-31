@@ -96,22 +96,38 @@ export default function DesignPanel({
 
   return (
     <aside className={`design-panel${mobileOpen ? " mobile-open" : ""}`}>
-      <header className="design-head">
+      {/* iOS-style drag handle visible only on mobile */}
+      <button type="button" className="design-drag-handle" onClick={onMobileToggle} aria-label="Expand sheet">
+        <span />
+      </button>
+
+      <header className="design-head" onClick={(e) => {
+        // Tap the whole head on mobile to toggle the sheet (except taps inside controls)
+        if (e.target.closest("button, a, input")) return;
+        if (window.matchMedia("(max-width: 820px)").matches) onMobileToggle?.();
+      }}>
         <div className="design-head-left">
           {variant && (
-            <span className="design-head-code" style={{ background: variant.brand }}>
-              {variant.code || variant.name}
+            <span className="design-head-thumb">
+              {variant.preview ? (
+                <img src={variant.preview} alt="" />
+              ) : (
+                <span className="design-head-mock" style={{ background: variant.brand }} />
+              )}
+              <span className="design-head-code-overlay" style={{ background: variant.brand }}>
+                {variant.code || variant.name}
+              </span>
             </span>
           )}
-          <div>
+          <div className="design-head-text">
             <strong>{variant?.name || "Pick a design"}</strong>
-            <small>{isSky ? "Sky" : "Tiger"} · live preview &amp; customize</small>
+            <small>{mobileOpen ? "Tap ▼ to collapse" : `${isSky ? "Sky" : "Tiger"} · tap to customize`}</small>
           </div>
         </div>
         <button
           type="button"
           className="design-mobile-toggle"
-          onClick={onMobileToggle}
+          onClick={(e) => { e.stopPropagation(); onMobileToggle?.(); }}
           aria-label={mobileOpen ? "Collapse" : "Expand"}
         >
           {mobileOpen ? "▼" : "▲"}

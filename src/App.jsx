@@ -82,10 +82,23 @@ export default function App() {
           <MainGallery
             activeTheme={config.activeTheme}
             brand={config.brand}
-            setBrand={config.setBrand}
+            setBrand={(...args) => {
+              config.setBrand(...args);
+              // Picking a card on mobile auto-opens the sheet so the customer
+              // immediately sees the preview + customize controls.
+              if (window.matchMedia("(max-width: 820px)").matches) {
+                setMobileSettingsOpen(true);
+              }
+            }}
             onTigerPreview={() => setPreviewOpen(true)}
           />
         </main>
+
+        {/* Mobile-only backdrop that dims the gallery when the sheet is open */}
+        <div
+          className={`sheet-backdrop${mobileSettingsOpen ? " open" : ""}`}
+          onClick={() => setMobileSettingsOpen(false)}
+        />
 
         <DesignPanel
           {...config}
