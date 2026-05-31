@@ -230,7 +230,9 @@ export default function ConfigPanel({
                 title={p.name}
               >
                 <span className="shop-card-preview" aria-hidden="true">
-                  {isSky ? (
+                  {p.preview ? (
+                    <img src={p.preview} alt={p.name} className="shop-preview-img" />
+                  ) : isSky ? (
                     <>
                       <span className="shop-preview-bar" style={{ background: `linear-gradient(180deg, ${p.brand}, ${darkenHex(p.brand, 0.35)})` }} />
                       <span className="shop-preview-menu" />

@@ -281,6 +281,15 @@
   overflow: hidden;
   margin-bottom: 6px;
 }
+.shop-preview-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
 .shop-preview-bar {
   position: absolute;
   top: 0;

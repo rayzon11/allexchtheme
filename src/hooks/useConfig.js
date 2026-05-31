@@ -5,30 +5,23 @@ import { useCallback, useEffect, useState } from "react";
 export const SKY_DEFAULT_BRAND = "#474747"; // dark grey — same as the saved Sky header
 export const TIGER_DEFAULT_BRAND = "#cc0a00"; // red — same as the saved Tiger nav
 
-// Sky header colour swatches matched to the Notion design palette.
-// Each preset only changes the dark .top header gradient; the iconic gold menu
-// bar and the rest of the saved Sky247 chrome stay pixel-perfect.
+// Sky design shop — variants matched to the actual Notion reference screenshots.
+// Each preset bundles a brand colour AND a real screenshot of the variant so the
+// customer browses real product photos in the shop grid.
 export const SKY_PRESETS = [
-  { name: "Original Sky", brand: "#474747" },
-  { name: "Charcoal", brand: "#1f2937" },
-  { name: "Classic Gold", brand: "#ffb400" },
-  { name: "Royal Blue", brand: "#1d4ed8" },
-  { name: "Royal Cyan", brand: "#00a8ff" },
-  { name: "Emerald", brand: "#1b5e20" },
-  { name: "Forest", brand: "#2e7d32" },
-  { name: "Maroon", brand: "#7b1f1f" },
-  { name: "Crimson", brand: "#c62828" },
-  { name: "Coral", brand: "#ef5350" },
-  { name: "Sunset", brand: "#ff4500" },
-  { name: "Sienna", brand: "#8b4513" },
-  { name: "Rose Gold", brand: "#d63384" },
-  { name: "Hot Pink", brand: "#ec407a" },
-  { name: "Magenta", brand: "#9c27b0" },
-  { name: "Deep Purple", brand: "#4a148c" },
-  { name: "Indigo", brand: "#283593" },
-  { name: "Mint", brand: "#14b8a6" },
-  { name: "Olive", brand: "#827717" },
-  { name: "Slate", brand: "#475569" },
+  { name: "Original Sky", brand: "#474747", preview: "/shop/sky-original.png" },
+  { name: "Sienna", brand: "#8b4513", preview: "/shop/sky-sienna.png" },
+  { name: "Rose Gold", brand: "#d63384", preview: "/shop/sky-rose.png" },
+  { name: "Maroon", brand: "#7b1f1f", preview: "/shop/sky-maroon.png" },
+  { name: "Emerald", brand: "#1b5e20", preview: "/shop/sky-emerald.png" },
+  { name: "Royal Blue", brand: "#1d4ed8", preview: "/shop/sky-blue.png" },
+  { name: "Coral", brand: "#ef5350", preview: "/shop/sky-coral.png" },
+  { name: "Crimson", brand: "#c62828", preview: "/shop/sky-crimson.png" },
+  { name: "Magenta", brand: "#9c27b0", preview: "/shop/sky-magenta.png" },
+  { name: "Royal Cyan", brand: "#00a8ff", preview: "/shop/sky-cyan.png" },
+  { name: "Deep Purple", brand: "#4a148c", preview: "/shop/sky-deep-purple.png" },
+  { name: "Indigo", brand: "#283593", preview: "/shop/sky-indigo.png" },
+  { name: "Hot Pink", brand: "#ec407a", preview: "/shop/sky-hot-pink.png" },
 ];
 
 export const TIGER_PRESETS = [
