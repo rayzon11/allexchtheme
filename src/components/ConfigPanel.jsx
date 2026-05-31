@@ -8,6 +8,17 @@ import {
   normaliseHex,
 } from "../hooks/useConfig";
 
+// Mini helper used by the shop cards to render the second gradient stop.
+function darkenHex(hex, amt = 0.35) {
+  const m = /^#([0-9a-f]{6})$/i.exec(hex || "");
+  if (!m) return hex;
+  const n = parseInt(m[1], 16);
+  const r = Math.round((n >> 16) * (1 - amt));
+  const g = Math.round(((n >> 8) & 0xff) * (1 - amt));
+  const b = Math.round((n & 0xff) * (1 - amt));
+  return "#" + [r, g, b].map((c) => c.toString(16).padStart(2, "0")).join("");
+}
+
 function BrandRow({ value, onChange }) {
   const [draft, setDraft] = useState(value);
   const [invalid, setInvalid] = useState(false);
@@ -198,19 +209,49 @@ export default function ConfigPanel({
       <div className="config-section">
         <div className="config-section-title">Brand Colour</div>
         <BrandRow value={brand} onChange={setBrand} />
-        <div className="preset-grid" style={{ marginTop: 10 }}>
-          {presets.map((p) => (
-            <button
-              key={p.name}
-              type="button"
-              className={`preset-chip ${p.brand.toLowerCase() === brand.toLowerCase() ? "active" : ""}`}
-              onClick={() => setBrand(p.brand)}
-              title={p.name}
-            >
-              <span className="preset-chip-dot" style={{ background: p.brand }} />
-              <span>{p.name}</span>
-            </button>
-          ))}
+      </div>
+
+      <div className="config-section">
+        <div className="config-section-title">
+          {isSky ? "Sky Design Shop" : "Tiger Design Shop"}
+        </div>
+        <div className="config-section-sub">
+          Pick a style — each card applies a complete look
+        </div>
+        <div className="shop-grid">
+          {presets.map((p) => {
+            const active = p.brand.toLowerCase() === brand.toLowerCase();
+            return (
+              <button
+                key={p.name}
+                type="button"
+                className={`shop-card${active ? " active" : ""}`}
+                onClick={() => setBrand(p.brand)}
+                title={p.name}
+              >
+                <span className="shop-card-preview" aria-hidden="true">
+                  {isSky ? (
+                    <>
+                      <span className="shop-preview-bar" style={{ background: `linear-gradient(180deg, ${p.brand}, ${darkenHex(p.brand, 0.35)})` }} />
+                      <span className="shop-preview-menu" />
+                      <span className="shop-preview-body" />
+                    </>
+                  ) : (
+                    <>
+                      <span className="shop-preview-bar" style={{ background: p.brand }} />
+                      <span className="shop-preview-side" style={{ background: p.brand }} />
+                      <span className="shop-preview-body-tiger" />
+                    </>
+                  )}
+                </span>
+                <span className="shop-card-meta">
+                  <span className="shop-card-dot" style={{ background: p.brand }} />
+                  <span className="shop-card-name">{p.name}</span>
+                </span>
+                {active && <span className="shop-card-tag">✓ Selected</span>}
+              </button>
+            );
+          })}
         </div>
       </div>
 
