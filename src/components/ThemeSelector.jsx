@@ -1,141 +1,179 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { THEMES } from "../hooks/useConfig";
 
+const CATEGORIES = ["All", "Exchange", "Sportsbook", "Casino"];
+
 /**
- * Theme picker that scales to 20+ products.
- * Top-bar trigger shows the current theme name; clicking opens a popover
- * (desktop) or full-screen sheet (mobile) with searchable, category-grouped
- * theme cards. Live themes are clickable, coming-soon themes are dimmed
- * with a "Soon" badge.
+ * Theme marketplace — full-screen shopping experience.
+ * Trigger pill in the top bar shows the active theme; clicking opens a
+ * big shop view with hero, search, category filters, and product cards.
  */
 export default function ThemeSelector({ activeTheme, setActiveTheme }) {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
-  const popRef = useRef(null);
-  const triggerRef = useRef(null);
+  const [cat, setCat] = useState("All");
 
   const current = THEMES.find((t) => t.id === activeTheme) || THEMES[0];
+  const liveCount = THEMES.filter((t) => t.live).length;
+  const total = THEMES.length;
 
-  // Close on outside click or Escape
+  // Lock page scroll when shop is open
   useEffect(() => {
     if (!open) return;
-    const onClick = (e) => {
-      if (popRef.current?.contains(e.target)) return;
-      if (triggerRef.current?.contains(e.target)) return;
-      setOpen(false);
-    };
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     const onKey = (e) => { if (e.key === "Escape") setOpen(false); };
-    document.addEventListener("mousedown", onClick);
     window.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener("mousedown", onClick);
+      document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
     };
   }, [open]);
 
-  const groups = useMemo(() => {
+  const filtered = useMemo(() => {
     const filter = q.trim().toLowerCase();
-    const matches = (t) =>
-      !filter ||
-      t.name.toLowerCase().includes(filter) ||
-      t.tagline.toLowerCase().includes(filter) ||
-      t.category.toLowerCase().includes(filter);
-    const order = ["Exchange", "Sportsbook", "Casino"];
-    const buckets = {};
-    THEMES.filter(matches).forEach((t) => {
-      (buckets[t.category] ||= []).push(t);
+    return THEMES.filter((t) => {
+      if (cat !== "All" && t.category !== cat) return false;
+      if (!filter) return true;
+      return (
+        t.name.toLowerCase().includes(filter) ||
+        t.tagline.toLowerCase().includes(filter) ||
+        t.category.toLowerCase().includes(filter)
+      );
     });
-    return order.filter((k) => buckets[k]).map((k) => ({ category: k, items: buckets[k] }));
-  }, [q]);
+  }, [q, cat]);
 
-  const liveCount = THEMES.filter((t) => t.live).length;
-  const total = THEMES.length;
+  const featured = useMemo(() => THEMES.find((t) => t.live) || THEMES[0], []);
 
   const pickTheme = (t) => {
     if (!t.live) return;
     setActiveTheme(t.id);
     setOpen(false);
     setQ("");
+    setCat("All");
   };
 
   return (
     <>
       <button
         type="button"
-        ref={triggerRef}
         className={`theme-trigger${open ? " open" : ""}`}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => setOpen(true)}
         aria-haspopup="dialog"
-        aria-expanded={open}
       >
         <span className="theme-trigger-thumb">
           <img src={current.cover} alt="" />
         </span>
         <span className="theme-trigger-text">
           <strong>{current.name}</strong>
-          <small>{current.category} · {liveCount}/{total} live</small>
+          <small>Browse all themes</small>
         </span>
         <span className="theme-trigger-chev">▾</span>
       </button>
 
       {open && (
-        <>
-          <div className="theme-sheet-backdrop" onClick={() => setOpen(false)} />
-          <div className="theme-pop" ref={popRef} role="dialog" aria-label="Choose theme">
-            <header className="theme-pop-head">
-              <strong>Choose a theme</strong>
-              <button type="button" className="theme-pop-close" onClick={() => setOpen(false)} aria-label="Close">✕</button>
-            </header>
-            <div className="theme-pop-search">
-              <input
-                type="text"
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Search themes…"
-                autoFocus
-              />
+        <div className="shop-modal" role="dialog" aria-label="Theme marketplace">
+          <header className="shop-top">
+            <div className="shop-top-brand">
+              <div className="app-mark">A</div>
+              <div>
+                <strong>Theme Shop</strong>
+                <small>{liveCount} live · {total - liveCount} coming soon</small>
+              </div>
             </div>
+            <button type="button" className="shop-close" onClick={() => setOpen(false)} aria-label="Close shop">
+              ✕
+            </button>
+          </header>
 
-            <div className="theme-pop-body">
-              {groups.length === 0 && (
-                <div className="theme-pop-empty">No themes match “{q}”</div>
-              )}
-              {groups.map(({ category, items }) => (
-                <section key={category} className="theme-pop-group">
-                  <header className="theme-pop-group-head">
-                    <span className="theme-pop-group-name">{category}</span>
-                    <span className="theme-pop-group-count">{items.length}</span>
-                  </header>
-                  <div className="theme-pop-grid">
-                    {items.map((t) => {
-                      const isActive = t.id === activeTheme;
-                      return (
+          <div className="shop-scroll">
+            {/* HERO */}
+            <section className="shop-hero">
+              <div className="shop-hero-text">
+                <span className="shop-hero-eyebrow">Featured</span>
+                <h1>{featured.name}</h1>
+                <p>{featured.tagline}</p>
+                <div className="shop-hero-actions">
+                  <button type="button" className="shop-cta" onClick={() => pickTheme(featured)}>
+                    Customize this theme →
+                  </button>
+                  <span className="shop-hero-tag">{featured.category}</span>
+                </div>
+              </div>
+              <div className="shop-hero-art">
+                <img src={featured.cover} alt={featured.name} />
+              </div>
+            </section>
+
+            {/* FILTER BAR */}
+            <section className="shop-filters">
+              <div className="shop-search">
+                <span className="shop-search-icon" aria-hidden="true">🔍</span>
+                <input
+                  type="text"
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
+                  placeholder="Search themes by name, category, or feature…"
+                />
+                {q && <button type="button" className="shop-search-clear" onClick={() => setQ("")} aria-label="Clear">✕</button>}
+              </div>
+              <div className="shop-cats">
+                {CATEGORIES.map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    className={`shop-cat${cat === c ? " active" : ""}`}
+                    onClick={() => setCat(c)}
+                  >
+                    {c}
+                    <span className="shop-cat-count">
+                      {c === "All" ? total : THEMES.filter((t) => t.category === c).length}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </section>
+
+            {/* PRODUCT GRID */}
+            <section className="shop-grid">
+              {filtered.length === 0 ? (
+                <div className="shop-empty">
+                  <strong>No themes match your search</strong>
+                  <p>Try different keywords or reset the category filter.</p>
+                </div>
+              ) : (
+                filtered.map((t) => {
+                  const isActive = t.id === activeTheme;
+                  return (
+                    <article
+                      key={t.id}
+                      className={`shop-product${isActive ? " active" : ""}${t.live ? "" : " soon"}`}
+                    >
+                      <div className="shop-product-cover">
+                        <img src={t.cover} alt={t.name} />
+                        {!t.live && <span className="shop-product-badge">Coming soon</span>}
+                        {isActive && <span className="shop-product-badge active">✓ Active</span>}
+                      </div>
+                      <div className="shop-product-body">
+                        <div className="shop-product-cat">{t.category}</div>
+                        <h3>{t.name}</h3>
+                        <p>{t.tagline}</p>
                         <button
-                          key={t.id}
                           type="button"
-                          className={`theme-pop-card${isActive ? " active" : ""}${t.live ? "" : " soon"}`}
+                          className="shop-product-cta"
                           onClick={() => pickTheme(t)}
                           disabled={!t.live}
-                          title={t.live ? t.tagline : "Coming soon"}
                         >
-                          <span className="theme-pop-card-cover">
-                            <img src={t.cover} alt={t.name} />
-                            {!t.live && <span className="theme-pop-card-badge">Soon</span>}
-                            {isActive && <span className="theme-pop-card-badge active">✓ Active</span>}
-                          </span>
-                          <span className="theme-pop-card-meta">
-                            <span className="theme-pop-card-name">{t.name}</span>
-                            <span className="theme-pop-card-tag">{t.tagline}</span>
-                          </span>
+                          {t.live ? (isActive ? "✓ Selected — open" : "Customize this →") : "Coming soon"}
                         </button>
-                      );
-                    })}
-                  </div>
-                </section>
-              ))}
-            </div>
+                      </div>
+                    </article>
+                  );
+                })
+              )}
+            </section>
           </div>
-        </>
+        </div>
       )}
     </>
   );
