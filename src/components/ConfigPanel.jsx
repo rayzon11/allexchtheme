@@ -91,6 +91,7 @@ export default function ConfigPanel({
   domainHistory,
   addDomainHistory,
   onRequestDesign,
+  onOpenPreview,
 }) {
   const isSky = activeTheme === "sky";
   const presets = isSky ? SKY_PRESETS : TIGER_PRESETS;
@@ -226,7 +227,11 @@ export default function ConfigPanel({
                 key={p.name}
                 type="button"
                 className={`shop-card${active ? " active" : ""}`}
-                onClick={() => setBrand(p.brand)}
+                onClick={() => {
+                  setBrand(p.brand);
+                  // For Tiger, pop the full-screen live preview on click.
+                  if (!isSky && onOpenPreview) onOpenPreview();
+                }}
                 title={p.name}
               >
                 <span className="shop-card-preview" aria-hidden="true">

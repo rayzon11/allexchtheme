@@ -1597,6 +1597,88 @@ body {
 }
 
 /* ============================================
+   TIGER PREVIEW OVERLAY — opens when a Tiger card is clicked
+   ============================================ */
+.preview-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(0, 0, 0, 0.78);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  animation: fade-in 0.18s ease;
+  backdrop-filter: blur(4px);
+}
+.preview-overlay-card {
+  width: min(1100px, 100%);
+  height: min(720px, calc(100vh - 40px));
+  display: flex;
+  flex-direction: column;
+  background: var(--c-bg-1);
+  border: 1px solid var(--c-line);
+  border-radius: 14px;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  animation: pop-in 0.22s ease;
+}
+.preview-overlay-bar {
+  flex: 0 0 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  background: var(--c-bg-2);
+  border-bottom: 1px solid var(--c-line);
+}
+.preview-overlay-dots {
+  display: inline-flex;
+  gap: 6px;
+}
+.preview-overlay-dots i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--c-line-strong);
+}
+.preview-overlay-dots i:nth-child(1) { background: #ff5f57; }
+.preview-overlay-dots i:nth-child(2) { background: #febc2e; }
+.preview-overlay-dots i:nth-child(3) { background: #28c840; }
+.preview-overlay-title {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--c-text);
+  letter-spacing: 0.02em;
+}
+.preview-overlay-close {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  background: var(--c-bg-3);
+  border: 1px solid var(--c-line);
+  border-radius: 6px;
+  color: var(--c-text);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.preview-overlay-close:hover {
+  background: var(--c-danger);
+  border-color: var(--c-danger);
+  color: #fff;
+}
+.preview-overlay-stage {
+  flex: 1;
+  position: relative;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* ============================================
    LOGIN PAGE — variant-specific designs that mirror the saved HTMLs
    ============================================ */
 .login-page {

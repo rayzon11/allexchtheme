@@ -1,17 +1,23 @@
 import { useState } from "react";
 import ConfigPanel from "./components/ConfigPanel";
 import OrderModal from "./components/OrderModal";
+import PreviewOverlay from "./components/PreviewOverlay";
 import SkyScreenshotPreview from "./components/SkyScreenshotPreview";
 import SkyExchangeTheme from "./components/themes/SkyExchangeTheme";
 import TigerExchTheme from "./components/themes/TigerExchTheme";
-import { useConfig } from "./hooks/useConfig";
+import { useConfig, TIGER_PRESETS } from "./hooks/useConfig";
 import "./App.css";
 
 export default function App() {
   const config = useConfig();
   const [orderOpen, setOrderOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [domain, setDomain] = useState("");
   const [domainHistory, setDomainHistory] = useState([]);
+
+  const tigerVariantName = TIGER_PRESETS.find(
+    (p) => p.brand.toLowerCase() === config.brand?.toLowerCase()
+  )?.name;
 
   const addDomainHistory = (entry) => {
     setDomainHistory((prev) => {
@@ -62,6 +68,7 @@ export default function App() {
           domainHistory={domainHistory}
           addDomainHistory={addDomainHistory}
           onRequestDesign={() => setOrderOpen(true)}
+          onOpenPreview={() => setPreviewOpen(true)}
         />
 
         <main className={`preview-pane device-${config.deviceMode}`}>
@@ -78,6 +85,13 @@ export default function App() {
           )}
         </main>
       </div>
+
+      <PreviewOverlay
+        isOpen={previewOpen}
+        onClose={() => setPreviewOpen(false)}
+        variantName={tigerVariantName}
+        themeProps={themeProps}
+      />
 
       <OrderModal
         isOpen={orderOpen}
