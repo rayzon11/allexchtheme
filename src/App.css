@@ -1,41 +1,230 @@
 /* ============================================
-   APP SHELL
+   APP SHELL — Claude-style dark warm aesthetic
    ============================================ */
+:root {
+  --c-bg-0: #1c1b1a;          /* base */
+  --c-bg-1: #232220;          /* panels */
+  --c-bg-2: #2a2926;          /* raised */
+  --c-bg-3: #34322f;          /* hover */
+  --c-line: #3a3835;
+  --c-line-strong: #4a4744;
+  --c-text: #f4f1ec;
+  --c-text-soft: #c8c4bd;
+  --c-text-muted: #908a82;
+  --c-accent: #d97757;         /* Claude warm coral accent */
+  --c-accent-soft: #e8a085;
+  --c-accent-deep: #b5573e;
+  --c-success: #4ade80;
+  --c-danger: #ef4444;
+  --c-warn: #facc15;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--c-bg-0);
+  color: var(--c-text);
+  font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .app-shell {
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100vh;
+  overflow: hidden;
+  background: var(--c-bg-0);
+}
+
+/* TOP BAR */
+.app-topbar {
+  flex: 0 0 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  background: var(--c-bg-1);
+  border-bottom: 1px solid var(--c-line);
+}
+.app-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.app-mark {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent-deep) 100%);
+  color: #fff;
+  font-weight: 900;
+  font-size: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--c-accent) 40%, transparent);
+}
+.app-title {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+.app-title strong {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--c-text);
+}
+.app-title small {
+  font-size: 11px;
+  color: var(--c-text-muted);
+  letter-spacing: 0.04em;
+}
+.app-topbar-right { display: flex; align-items: center; gap: 8px; }
+.topbar-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  background: var(--c-accent);
+  color: #fff;
+  border: 0;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+.topbar-ghost:hover {
+  background: var(--c-accent-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--c-accent) 35%, transparent);
+}
+
+/* BODY: panel + preview */
+.app-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
 }
 
 .preview-pane {
   flex: 1;
-  height: 100vh;
-  background: #fff;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at top, color-mix(in srgb, var(--c-accent) 6%, var(--c-bg-0)) 0%, var(--c-bg-0) 65%),
+    var(--c-bg-0);
   position: relative;
-  overflow: hidden;
+  overflow: auto;
+  padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
-/* Mobile preview frame — constrains the iframe to a 400px phone width and
-   centers it on a dark backdrop, so the saved HTMLs' mobile media queries fire
-   exactly like a real handset. */
+/* Mobile preview frame */
 .preview-pane.device-mobile {
-  background: #0b0f14;
-  display: flex;
   align-items: stretch;
-  justify-content: center;
-  padding: 20px 0;
+  padding: 24px 0;
 }
 .preview-pane.device-mobile .sky-stage,
-.preview-pane.device-mobile .tig-stage {
+.preview-pane.device-mobile .tig-stage,
+.preview-pane.device-mobile .sky-shot-stage {
   position: relative;
   width: 400px;
   max-width: 100%;
   height: 100%;
   border-radius: 26px;
   overflow: hidden;
-  box-shadow: 0 0 0 8px #1a1a1a, 0 24px 48px rgba(0, 0, 0, 0.6);
+  box-shadow:
+    0 0 0 8px #1a1a1a,
+    0 24px 48px rgba(0, 0, 0, 0.6);
 }
+
+/* ================================
+   Sky screenshot preview (Claude framed mock)
+   ================================ */
+.sky-shot-stage {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+}
+.sky-shot-frame {
+  background: var(--c-bg-1);
+  border: 1px solid var(--c-line);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+}
+.sky-shot-frame-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  height: 38px;
+  background: var(--c-bg-2);
+  border-bottom: 1px solid var(--c-line);
+}
+.sky-shot-dots {
+  display: inline-flex;
+  gap: 6px;
+}
+.sky-shot-dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--c-line-strong);
+}
+.sky-shot-dots i:nth-child(1) { background: #ff5f57; }
+.sky-shot-dots i:nth-child(2) { background: #febc2e; }
+.sky-shot-dots i:nth-child(3) { background: #28c840; }
+.sky-shot-url {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  padding: 0 12px;
+  background: var(--c-bg-3);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--c-text-muted);
+  font-family: ui-monospace, Consolas, monospace;
+  letter-spacing: 0.02em;
+}
+.sky-shot-meta {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--c-accent-soft);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.sky-shot-wrap {
+  background: #f5f7fa;
+  min-height: 200px;
+  position: relative;
+  display: flex;
+}
+.sky-shot-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+.sky-shot-empty {
+  width: 100%;
+  padding: 80px 24px;
+  text-align: center;
+  color: var(--c-text-muted);
+  font-size: 14px;
+}
+.device-mobile .sky-shot-stage { max-width: 400px; }
+.device-mobile .sky-shot-frame { border-radius: 22px; }
+.device-mobile .sky-shot-frame-bar { height: 30px; }
 
 .theme-iframe {
   position: absolute;
@@ -50,32 +239,33 @@
 .theme-iframe.ready { opacity: 1; }
 
 /* ============================================
-   LEFT CONFIG PANEL
+   LEFT CONFIG PANEL — Claude-style
    ============================================ */
 .config-panel {
-  width: 280px;
-  min-width: 280px;
-  height: 100vh;
+  width: 320px;
+  min-width: 320px;
+  height: 100%;
   overflow-y: auto;
-  background: #0f1923;
-  color: #fff;
-  border-right: 1px solid #1f2a37;
+  background: var(--c-bg-1);
+  color: var(--c-text);
+  border-right: 1px solid var(--c-line);
 }
-.config-panel::-webkit-scrollbar { width: 6px; }
-.config-panel::-webkit-scrollbar-track { background: #0f1923; }
-.config-panel::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+.config-panel::-webkit-scrollbar { width: 8px; }
+.config-panel::-webkit-scrollbar-track { background: transparent; }
+.config-panel::-webkit-scrollbar-thumb { background: var(--c-line-strong); border-radius: 4px; }
+.config-panel::-webkit-scrollbar-thumb:hover { background: var(--c-text-muted); }
 
 .config-section {
-  padding: 14px 14px;
-  border-bottom: 1px solid #1f2a37;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--c-line);
 }
 .config-section-title {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #94a3b8;
-  margin-bottom: 10px;
+  color: var(--c-text-muted);
+  margin-bottom: 12px;
 }
 
 /* Shared 2-column segmented switcher used by Theme + Page selectors.
@@ -85,53 +275,62 @@
 
 .theme-btn,
 .page-btn {
-  border: 1px solid #1f2a37;
-  background: #111c27;
-  color: #cbd5e1;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  border-radius: 6px;
-  transition: all 0.18s ease;
+  border: 1px solid var(--c-line);
+  background: var(--c-bg-2);
+  color: var(--c-text-soft);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 8px;
+  transition: all 0.15s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
+  cursor: pointer;
 }
 .theme-btn:hover,
-.page-btn:hover { border-color: #334155; color: #fff; }
+.page-btn:hover {
+  border-color: var(--c-line-strong);
+  background: var(--c-bg-3);
+  color: var(--c-text);
+}
 .theme-btn.active,
 .page-btn.active {
-  border-color: var(--brand, #ffb400);
-  background: color-mix(in srgb, var(--brand, #ffb400) 17%, transparent);
-  color: #fff;
+  border-color: var(--c-accent);
+  background: color-mix(in srgb, var(--c-accent) 14%, var(--c-bg-2));
+  color: var(--c-text);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--c-accent) 20%, transparent);
 }
 
-.theme-btn { height: 54px; padding: 4px; font-size: 11px; line-height: 1.2; border-width: 2px; }
-.page-btn { height: 38px; font-size: 12px; }
+.theme-btn { height: 56px; padding: 4px; font-size: 12px; line-height: 1.2; }
+.page-btn { height: 38px; font-size: 13px; }
 
 .site-name-input,
 .domain-input,
 .hex-input {
   width: 100%;
-  height: 36px;
-  background: #1a2532;
-  border: 1px solid #2a3a4a;
-  color: #fff;
-  border-radius: 6px;
-  padding: 0 10px;
+  height: 38px;
+  background: var(--c-bg-2);
+  border: 1px solid var(--c-line);
+  color: var(--c-text);
+  border-radius: 8px;
+  padding: 0 12px;
   font-size: 13px;
   outline: none;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 .site-name-input:focus,
 .domain-input:focus,
-.hex-input:focus { border-color: var(--brand, #ffb400); }
+.hex-input:focus {
+  border-color: var(--c-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-accent) 20%, transparent);
+}
 .hex-input {
   font-family: ui-monospace, Consolas, monospace;
   text-transform: uppercase;
   font-size: 12px;
 }
-.hex-input.invalid { border-color: #ff4d6d; }
+.hex-input.invalid { border-color: var(--c-danger); }
 
 /* Logo */
 .logo-upload-zone {
@@ -251,8 +450,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  background: #111c27;
-  border: 1.5px solid #1f2a37;
+  background: var(--c-bg-2);
+  border: 1.5px solid var(--c-line);
   border-radius: 10px;
   padding: 6px;
   cursor: pointer;
@@ -261,13 +460,13 @@
   text-align: left;
 }
 .shop-card:hover {
-  border-color: var(--brand, #ffb400);
+  border-color: var(--c-accent);
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
 }
 .shop-card.active {
-  border-color: var(--brand, #ffb400);
-  box-shadow: 0 0 0 2px var(--brand, #ffb400), 0 6px 18px color-mix(in srgb, var(--brand, #ffb400) 30%, transparent);
+  border-color: var(--c-accent);
+  box-shadow: 0 0 0 2px var(--c-accent), 0 8px 20px color-mix(in srgb, var(--c-accent) 30%, transparent);
 }
 
 /* Mini preview that mimics the live page chrome */
@@ -364,23 +563,23 @@
 }
 .shop-card-name {
   font-size: 11px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: 0.02em;
+  font-weight: 700;
+  color: var(--c-text);
+  letter-spacing: 0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .shop-card-tag {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  padding: 2px 6px;
-  background: var(--brand, #ffb400);
-  color: var(--brand-text, #000);
+  top: 10px;
+  right: 10px;
+  padding: 3px 8px;
+  background: var(--c-accent);
+  color: #fff;
   font-size: 9px;
-  font-weight: 900;
-  letter-spacing: 0.06em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   border-radius: 4px;
   text-transform: uppercase;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
@@ -505,18 +704,19 @@
 .request-btn {
   width: 100%;
   height: 44px;
-  background: linear-gradient(135deg, var(--brand, #ffb400), var(--brand-dark, #b86d00));
-  color: var(--brand-text, #000);
+  background: linear-gradient(135deg, var(--c-accent), var(--c-accent-deep));
+  color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 13px;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.02em;
+  cursor: pointer;
   transition: all 0.18s ease;
 }
 .request-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 22px color-mix(in srgb, var(--brand, #ffb400) 35%, transparent);
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--c-accent) 35%, transparent);
 }
 
 /* Domain checker */
