@@ -66,15 +66,21 @@ const HIDE_CSS_HOME = `
   .top {
     display: flex !important;
     flex-direction: column !important;
-    background: linear-gradient(180deg, var(--wl-brand, #474747) 0%,
-      color-mix(in srgb, var(--wl-brand, #474747) 25%, #000) 100%) !important;
+    background:
+      linear-gradient(180deg,
+        color-mix(in srgb, var(--wl-brand, #474747) 110%, #fff) 0%,
+        var(--wl-brand, #474747) 50%,
+        color-mix(in srgb, var(--wl-brand, #474747) 30%, #000) 100%) !important;
     border-bottom: 1px solid color-mix(in srgb, var(--wl-brand, #474747) 30%, #000) !important;
+    box-shadow: 0 6px 18px -4px rgba(0, 0, 0, 0.4) !important;
     transition: background 0.3s ease !important;
   }
   .top > .header.full-wrap, .top > .menu-wrap { width: 100% !important; flex-shrink: 0 !important; }
   /* The saved CSS pins .header with position:fixed which pulls it out of flow and
      causes .menu-wrap to overlay at y=0. Force static so flex column stacks them. */
   .top > .header.full-wrap { position: static !important; }
+  /* Make sure the embedded SKY247 logo never gets clipped by my swap. */
+  .top .header h1 a img { display: block !important; vertical-align: middle !important; }
 `;
 
 // Login-page CSS: hide the entire page body, re-show the centered login modal,

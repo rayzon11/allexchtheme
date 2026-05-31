@@ -5,19 +5,30 @@ import { useCallback, useEffect, useState } from "react";
 export const SKY_DEFAULT_BRAND = "#474747"; // dark grey — same as the saved Sky header
 export const TIGER_DEFAULT_BRAND = "#cc0a00"; // red — same as the saved Tiger nav
 
+// Sky header colour swatches matched to the Notion design palette.
+// Each preset only changes the dark .top header gradient; the iconic gold menu
+// bar and the rest of the saved Sky247 chrome stay pixel-perfect.
 export const SKY_PRESETS = [
   { name: "Original Sky", brand: "#474747" },
+  { name: "Charcoal", brand: "#1f2937" },
   { name: "Classic Gold", brand: "#ffb400" },
+  { name: "Royal Blue", brand: "#1d4ed8" },
   { name: "Royal Cyan", brand: "#00a8ff" },
-  { name: "Emerald", brand: "#00e676" },
-  { name: "Deep Purple", brand: "#b400ff" },
-  { name: "Sunset Red", brand: "#ff4500" },
-  { name: "Cyber Neon", brand: "#00f5ff" },
-  { name: "Hot Pink", brand: "#ff2d7e" },
+  { name: "Emerald", brand: "#1b5e20" },
+  { name: "Forest", brand: "#2e7d32" },
+  { name: "Maroon", brand: "#7b1f1f" },
+  { name: "Crimson", brand: "#c62828" },
+  { name: "Coral", brand: "#ef5350" },
+  { name: "Sunset", brand: "#ff4500" },
+  { name: "Sienna", brand: "#8b4513" },
+  { name: "Rose Gold", brand: "#d63384" },
+  { name: "Hot Pink", brand: "#ec407a" },
+  { name: "Magenta", brand: "#9c27b0" },
+  { name: "Deep Purple", brand: "#4a148c" },
+  { name: "Indigo", brand: "#283593" },
   { name: "Mint", brand: "#14b8a6" },
-  { name: "Sapphire", brand: "#1d4ed8" },
-  { name: "Steel", brand: "#64748b" },
-  { name: "Crimson", brand: "#dc2626" },
+  { name: "Olive", brand: "#827717" },
+  { name: "Slate", brand: "#475569" },
 ];
 
 export const TIGER_PRESETS = [
