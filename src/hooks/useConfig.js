@@ -63,6 +63,16 @@ export const SKY_GROUP_COLOURS = {
   Dark: "#475569",
 };
 
+// Shared screenshots reused for every Sky variant's secondary views.
+// The boss exported these from the saved HTML — they're the actual mobile/login
+// captures and look the same across colour variants (the body content differs,
+// the chrome colour is what the variant changes).
+export const SKY_VIEWS_FALLBACK = {
+  loginDesktop: "/shop/sky-login-desktop.png",
+  homeMobile: "/shop/sky-mobile-home.png",
+  loginMobile: "/shop/sky-mobile-login.png",
+};
+
 export const TIGER_PRESETS = [
   { name: "Original Tiger", brand: "#cc0a00" },
   { name: "Midnight", brand: "#1a1a2e" },
