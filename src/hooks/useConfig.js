@@ -73,10 +73,18 @@ export const SKY_VIEWS_FALLBACK = {
   loginMobile: "/shop/sky-mobile-login.png",
 };
 
-// Theme catalog — the product picker scales to 20+ entries by reading this list.
-// `live` themes have a working gallery; `comingSoon` themes show in the selector
-// but are disabled until their assets ship. Add new themes here, no UI changes
-// needed.
+// Theme catalog — the product picker scales to any number of entries by reading
+// this list. To add a new theme, paste another object below following the same
+// shape. Each new theme needs:
+//   id        unique slug used by activeTheme state
+//   name      display name shown in selector + gallery header
+//   tagline   short one-line description
+//   category  "Exchange" | "Sportsbook" | "Casino"  (groups themes in selector)
+//   cover     URL to /shop/<file>.png used as the card cover image
+//   live      true to enable the theme; false greys it out as "Soon"
+//
+// The selector, gallery, and design panel all read from THEMES so no UI code
+// has to change when new themes ship.
 export const THEMES = [
   {
     id: "sky",
@@ -94,26 +102,17 @@ export const THEMES = [
     cover: "/shop/sky-v11.png",
     live: true,
   },
-  // ── Coming-soon placeholders — show in selector, disabled until shipped. ──
-  { id: "lotus365",   name: "Lotus 365",        tagline: "Premium betting brand",       category: "Exchange",   cover: "/shop/sky-v6.png", live: false },
-  { id: "diamond",    name: "Diamond Exch",     tagline: "Casino + exchange combo",     category: "Exchange",   cover: "/shop/sky-v14.png", live: false },
-  { id: "royalclub",  name: "Royal Club",       tagline: "VIP-tier sportsbook",         category: "Sportsbook", cover: "/shop/sky-v3.png", live: false },
-  { id: "crownbet",   name: "Crown Bet",        tagline: "Multi-sport book + casino",   category: "Sportsbook", cover: "/shop/sky-v9.png", live: false },
-  { id: "magicbet",   name: "Magic Bet",        tagline: "Mobile-first sportsbook",     category: "Sportsbook", cover: "/shop/sky-v12.png", live: false },
-  { id: "betway247",  name: "Betway 247",       tagline: "Cricket-focused exchange",    category: "Exchange",   cover: "/shop/sky-v18.png", live: false },
-  { id: "playzon",    name: "Playzon",          tagline: "Casino-first lobby",          category: "Casino",     cover: "/shop/sky-v5.png", live: false },
-  { id: "stardust",   name: "Stardust",         tagline: "Slots-heavy casino brand",    category: "Casino",     cover: "/shop/sky-v17.png", live: false },
-  { id: "kingbet",    name: "King Bet",         tagline: "Luxury exchange + casino",    category: "Exchange",   cover: "/shop/sky-v4.png", live: false },
-  { id: "vipclub",    name: "VIP Club",         tagline: "Premier exchange brand",      category: "Exchange",   cover: "/shop/sky-v8.png", live: false },
-  { id: "neonbet",    name: "Neon Bet",         tagline: "High-contrast modern UI",     category: "Sportsbook", cover: "/shop/sky-v13.png", live: false },
-  { id: "spinpalace", name: "Spin Palace",      tagline: "Animated casino lobby",       category: "Casino",     cover: "/shop/sky-v15.png", live: false },
-  { id: "thunder",    name: "Thunder Bet",      tagline: "Quick-bet sportsbook",        category: "Sportsbook", cover: "/shop/sky-v20.png", live: false },
-  { id: "luckyclub",  name: "Lucky Club",       tagline: "Fortune-themed casino",       category: "Casino",     cover: "/shop/sky-v2.png", live: false },
-  { id: "platinum",   name: "Platinum 247",     tagline: "VIP exchange platform",       category: "Exchange",   cover: "/shop/sky-v21.png", live: false },
-  { id: "rajbet",     name: "Raj Bet",          tagline: "India-focused exchange",      category: "Exchange",   cover: "/shop/sky-v7.png", live: false },
-  { id: "betbarter",  name: "Bet Barter",       tagline: "Peer-to-peer marketplace",    category: "Exchange",   cover: "/shop/sky-v10.png", live: false },
-  { id: "playfox",    name: "Play Fox",         tagline: "Animal-mascot casino",        category: "Casino",     cover: "/shop/sky-v16.png", live: false },
-  { id: "winner",     name: "Winner Club",      tagline: "Tournament sportsbook",       category: "Sportsbook", cover: "/shop/sky-v19.png", live: false },
+
+  // ── More themes go here. Boss will add them when ready. ──
+  // Example shape:
+  //   {
+  //     id: "newbrand",
+  //     name: "New Brand",
+  //     tagline: "What makes it special",
+  //     category: "Exchange",
+  //     cover: "/shop/newbrand-cover.png",
+  //     live: true,
+  //   },
 ];
 
 export const TIGER_PRESETS = [
