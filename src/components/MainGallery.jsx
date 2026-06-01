@@ -10,7 +10,7 @@ import {
  * the selected variant updates (brand applies + right panel shows that
  * variant's full design). No inline expansion — everything lives on the right.
  */
-export default function MainGallery({ activeTheme, brand, setBrand, onTigerPreview }) {
+export default function MainGallery({ activeTheme, selectedCode, onSelectVariant }) {
   const isSky = activeTheme === "sky";
 
   const groups = useMemo(() => {
@@ -22,7 +22,7 @@ export default function MainGallery({ activeTheme, brand, setBrand, onTigerPrevi
   }, [isSky]);
 
   const onCardClick = (p) => {
-    setBrand(p.brand);
+    onSelectVariant?.(p);
   };
 
   return (
@@ -50,7 +50,7 @@ export default function MainGallery({ activeTheme, brand, setBrand, onTigerPrevi
             </header>
             <div className="main-grid">
               {items.map((p) => {
-                const active = p.brand.toLowerCase() === brand?.toLowerCase();
+                const active = p.code === selectedCode;
                 return (
                   <button
                     key={p.code || p.name}

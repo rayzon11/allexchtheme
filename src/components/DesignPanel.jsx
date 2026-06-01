@@ -56,6 +56,7 @@ export default function DesignPanel({
   brand,
   setBrand,
   resetBrand,
+  selectedCode,
   logoSrc,
   logoFileName,
   hasCustomLogo,
@@ -73,8 +74,14 @@ export default function DesignPanel({
 
   const variant = useMemo(() => {
     const list = isSky ? SKY_PRESETS : TIGER_PRESETS;
-    return list.find((p) => p.brand.toLowerCase() === brand?.toLowerCase()) || list[0];
-  }, [isSky, brand]);
+    // Match by the selected variant CODE first (several variants share a hex);
+    // fall back to brand-colour match, then the first variant.
+    return (
+      list.find((p) => p.code === selectedCode) ||
+      list.find((p) => p.brand.toLowerCase() === brand?.toLowerCase()) ||
+      list[0]
+    );
+  }, [isSky, selectedCode, brand]);
 
   const slides = useMemo(() => {
     if (!variant) return [];

@@ -361,6 +361,14 @@ export function useConfig() {
     sky: SKY_DEFAULT_BRAND,
     tiger: TIGER_DEFAULT_BRAND,
   });
+  // Which variant CODE is selected per theme. Needed because several variants
+  // share the same brand hex (Yl01/Yl03 both #FFB600, Bu01/Bu02 both #005DAC,
+  // Wt01/Wt03 both #E4E4E4) — selecting by colour alone would show the wrong
+  // variant's screenshots. Defaults to the first variant of each theme.
+  const [selectedCodeByTheme, setSelectedCodeByTheme] = useState({
+    sky: SKY_PRESETS[0]?.code,
+    tiger: TIGER_PRESETS[0]?.code,
+  });
   // Per-theme custom logos. `primary` = the main text/header logo. `mark` = the graphical
   // icon used in the Tiger sidenav (and as a secondary mark elsewhere). `null` falls back
   // to the theme's built-in default (real Sky247 PNG / real Tiger PNGs).
@@ -394,6 +402,7 @@ export function useConfig() {
 
   const siteName = siteNamesByTheme[activeTheme];
   const brand = brandByTheme[activeTheme];
+  const selectedCode = selectedCodeByTheme[activeTheme];
 
   useEffect(() => {
     document.title = siteName || "White Label Configurator";
@@ -419,6 +428,16 @@ export function useConfig() {
     if (!isValidHex(hex)) return;
     const norm = normaliseHex(hex);
     setBrandByTheme((prev) => ({ ...prev, [activeTheme]: norm }));
+  }, [activeTheme]);
+
+  // Select a whole variant by its preset object — sets the selected CODE
+  // (so the right preview shows) AND applies its brand colour.
+  const selectVariant = useCallback((preset) => {
+    if (!preset) return;
+    setSelectedCodeByTheme((prev) => ({ ...prev, [activeTheme]: preset.code }));
+    if (preset.brand && isValidHex(preset.brand)) {
+      setBrandByTheme((prev) => ({ ...prev, [activeTheme]: normaliseHex(preset.brand) }));
+    }
   }, [activeTheme]);
 
   const resetBrand = useCallback(() => {
@@ -500,6 +519,8 @@ export function useConfig() {
     brand,
     setBrand,
     resetBrand,
+    selectedCode,
+    selectVariant,
     logoSrc,
     logoFileName,
     hasCustomLogo,

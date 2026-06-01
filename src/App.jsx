@@ -70,16 +70,15 @@ export default function App() {
         <main className="app-canvas">
           <MainGallery
             activeTheme={config.activeTheme}
-            brand={config.brand}
-            setBrand={(...args) => {
-              config.setBrand(...args);
+            selectedCode={config.selectedCode}
+            onSelectVariant={(preset) => {
+              config.selectVariant(preset);
               // Picking a card on mobile auto-opens the sheet so the customer
               // immediately sees the preview + customize controls.
               if (window.matchMedia("(max-width: 820px)").matches) {
                 setMobileSettingsOpen(true);
               }
             }}
-            onTigerPreview={() => setPreviewOpen(true)}
           />
         </main>
 
