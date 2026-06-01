@@ -72,6 +72,7 @@ export default function App() {
             activeTheme={config.activeTheme}
             setActiveTheme={config.setActiveTheme}
             selectedCode={config.selectedCode}
+            onRequest={() => setOrderOpen(true)}
             onSelectVariant={(preset) => {
               config.selectVariant(preset);
               // Picking a card on mobile auto-opens the sheet so the customer
