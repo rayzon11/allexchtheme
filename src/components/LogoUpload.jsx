@@ -1,9 +1,8 @@
 import { useRef } from "react";
 
 /**
- * Single logo upload control — preview thumbnail with name + remove button,
- * then a click-to-upload zone, then a size slider.
- * No demo grid. One logo, one upload.
+ * Minimal logo control — just the customer's own logo + an upload/replace zone.
+ * No default logo, no size slider, no colour controls. One logo, one upload.
  */
 export default function LogoUpload({
   logoSrc,
@@ -12,10 +11,6 @@ export default function LogoUpload({
   hasCustomLogo,
   onUpload,
   onRemove,
-  size,
-  onSizeChange,
-  sizeMin = 16,
-  sizeMax = 96,
   uploadLabel = "Upload your logo",
   replaceLabel = "Replace logo",
 }) {
@@ -29,31 +24,25 @@ export default function LogoUpload({
 
   return (
     <div>
-      <div className="logo-preview">
-        {logoSrc ? (
-          <img src={logoSrc} alt="logo" className="logo-preview-thumb" />
-        ) : (
-          <span className="logo-preview-name" style={{ color: "#908a82" }}>No logo</span>
-        )}
-        <span className="logo-preview-name">
-          {hasCustomLogo ? logoFileName : "Default"}
-        </span>
-        {hasCustomLogo && (
+      {hasCustomLogo && (
+        <div className="logo-preview">
+          <img src={logoSrc} alt="Your logo" className="logo-preview-thumb" />
+          <span className="logo-preview-name">{logoFileName || "Your logo"}</span>
           <button
             type="button"
             className="logo-remove-btn"
             onClick={onRemove}
-            aria-label="Revert to default"
-            title="Revert to default"
+            aria-label="Remove logo"
+            title="Remove logo"
           >×</button>
-        )}
-      </div>
+        </div>
+      )}
 
       <button
         type="button"
         className="logo-upload-zone"
         onClick={handleClick}
-        style={{ marginTop: 8 }}
+        style={hasCustomLogo ? { marginTop: 8 } : undefined}
       >
         <span>
           <strong style={{ display: "block", marginBottom: 2, color: "#f4f1ec", fontSize: 13 }}>
@@ -71,22 +60,6 @@ export default function LogoUpload({
         style={{ display: "none" }}
       />
       {logoError && <p className="logo-error">{logoError}</p>}
-
-      {typeof size === "number" && onSizeChange && (
-        <div className="logo-size-row">
-          <span className="logo-size-label">Size</span>
-          <input
-            type="range"
-            className="logo-size-slider"
-            min={sizeMin}
-            max={sizeMax}
-            step={1}
-            value={size}
-            onChange={(e) => onSizeChange(Number(e.target.value))}
-          />
-          <span className="logo-size-value">{size}px</span>
-        </div>
-      )}
     </div>
   );
 }

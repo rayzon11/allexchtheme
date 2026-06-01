@@ -1,48 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import LogoUpload from "./LogoUpload";
 import {
   SKY_PRESETS,
   TIGER_PRESETS,
   SKY_VIEWS,
   TIGER_VIEWS,
-  isValidHex,
-  normaliseHex,
 } from "../hooks/useConfig";
-
-function BrandRow({ value, onChange }) {
-  const [draft, setDraft] = useState(value);
-  const [invalid, setInvalid] = useState(false);
-
-  useEffect(() => { setDraft(value); setInvalid(false); }, [value]);
-
-  const handleHex = (e) => {
-    let next = e.target.value;
-    if (!next.startsWith("#")) next = "#" + next;
-    setDraft(next);
-    if (isValidHex(next)) {
-      setInvalid(false);
-      onChange(normaliseHex(next));
-    } else {
-      setInvalid(true);
-    }
-  };
-
-  return (
-    <div className="brand-row">
-      <label className="brand-swatch" style={{ background: value }}>
-        <input type="color" value={value} onChange={(e) => onChange(e.target.value)} />
-      </label>
-      <input
-        type="text"
-        className={`hex-input${invalid ? " invalid" : ""}`}
-        value={draft.toUpperCase()}
-        onChange={handleHex}
-        maxLength={7}
-        spellCheck={false}
-      />
-    </div>
-  );
-}
 
 /**
  * Merged right-side panel: top half is the selected design preview (Desktop
@@ -54,8 +17,6 @@ export default function DesignPanel({
   siteName,
   setSiteName,
   brand,
-  setBrand,
-  resetBrand,
   selectedCode,
   logoSrc,
   logoFileName,
@@ -63,8 +24,6 @@ export default function DesignPanel({
   logoError,
   uploadLogo,
   removeLogo,
-  logoSize,
-  setLogoSize,
   onRequestDesign,
   onOpenTigerPreview,
   mobileOpen,
@@ -169,15 +128,7 @@ export default function DesignPanel({
           </div>
 
           <div className="config-section">
-            <div className="config-section-title">Brand Colour</div>
-            <BrandRow value={brand} onChange={setBrand} />
-            <button type="button" className="reset-btn mt-8" onClick={resetBrand}>
-              ↺ Reset to default
-            </button>
-          </div>
-
-          <div className="config-section">
-            <div className="config-section-title">Logo</div>
+            <div className="config-section-title">Your Logo</div>
             <LogoUpload
               logoSrc={logoSrc}
               logoFileName={logoFileName}
@@ -185,8 +136,6 @@ export default function DesignPanel({
               logoError={logoError}
               onUpload={uploadLogo}
               onRemove={removeLogo}
-              size={logoSize}
-              onSizeChange={setLogoSize}
               uploadLabel="Upload your logo"
               replaceLabel="Replace logo"
             />
