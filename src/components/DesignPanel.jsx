@@ -4,6 +4,7 @@ import {
   SKY_PRESETS,
   TIGER_PRESETS,
   SKY_VIEWS,
+  TIGER_VIEWS,
   isValidHex,
   normaliseHex,
 } from "../hooks/useConfig";
@@ -76,8 +77,8 @@ export default function DesignPanel({
   }, [isSky, brand]);
 
   const slides = useMemo(() => {
-    if (!variant || !isSky) return [];
-    const views = SKY_VIEWS[variant.code] || {};
+    if (!variant) return [];
+    const views = (isSky ? SKY_VIEWS : TIGER_VIEWS)[variant.code] || {};
     return [
       { kind: "desktop", label: "Desktop · Home",        src: views.desktopHome       || variant.preview },
       { kind: "desktop", label: "Desktop · Login",       src: views.desktopLogin },
@@ -131,28 +132,17 @@ export default function DesignPanel({
       <div className="design-body">
         {/* PREVIEW section */}
         <section className="design-preview">
-          {isSky ? (
-            <>
-              <div className="design-preview-scroller">
-                {slides.map((s, i) => (
-                  <figure key={i} className={`design-slide design-slide-${s.kind}`}>
-                    <figcaption>{s.label}</figcaption>
-                    <div className="design-slide-frame">
-                      <img src={s.src} alt={s.label} />
-                    </div>
-                  </figure>
-                ))}
-              </div>
-              <p className="design-preview-hint">← swipe to see all views →</p>
-            </>
-          ) : (
-            <div className="design-preview-tiger">
-              <p>The Tiger preview is fully interactive.</p>
-              <button type="button" className="request-btn" onClick={onOpenTigerPreview}>
-                Open live preview
-              </button>
-            </div>
-          )}
+          <div className="design-preview-scroller">
+            {slides.map((s, i) => (
+              <figure key={i} className={`design-slide design-slide-${s.kind}`}>
+                <figcaption>{s.label}</figcaption>
+                <div className="design-slide-frame">
+                  <img src={s.src} alt={s.label} loading="lazy" />
+                </div>
+              </figure>
+            ))}
+          </div>
+          <p className="design-preview-hint">← swipe to see all views →</p>
         </section>
 
         {/* CUSTOMIZE section — merged in below */}

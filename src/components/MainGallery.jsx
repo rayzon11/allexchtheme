@@ -14,18 +14,15 @@ export default function MainGallery({ activeTheme, brand, setBrand, onTigerPrevi
   const isSky = activeTheme === "sky";
 
   const groups = useMemo(() => {
-    if (isSky) {
-      const order = ["Yellow", "Green", "Orange", "Red", "Blue", "Purple", "White"];
-      const buckets = {};
-      SKY_PRESETS.forEach((p) => { (buckets[p.group || "Other"] ||= []).push(p); });
-      return order.filter((g) => buckets[g]).map((g) => ({ group: g, items: buckets[g] }));
-    }
-    return [{ group: "Tiger", items: TIGER_PRESETS }];
+    const order = ["Yellow", "Green", "Orange", "Red", "Blue", "Purple", "White"];
+    const list = isSky ? SKY_PRESETS : TIGER_PRESETS;
+    const buckets = {};
+    list.forEach((p) => { (buckets[p.group || "Other"] ||= []).push(p); });
+    return order.filter((g) => buckets[g]).map((g) => ({ group: g, items: buckets[g] }));
   }, [isSky]);
 
   const onCardClick = (p) => {
     setBrand(p.brand);
-    if (!isSky) onTigerPreview?.();
   };
 
   return (
@@ -42,7 +39,7 @@ export default function MainGallery({ activeTheme, brand, setBrand, onTigerPrevi
       </header>
 
       {groups.map(({ group, items }) => {
-        const groupColour = isSky ? SKY_GROUP_COLOURS[group] : "#cc0a00";
+        const groupColour = SKY_GROUP_COLOURS[group] || "#cc0a00";
         return (
           <section key={group} className="main-group">
             <header className="main-group-head">
