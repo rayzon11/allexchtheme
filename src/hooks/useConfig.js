@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 // Brand colour per theme. Defaults match the saved HTML appearance so the app opens
 // looking exactly like the original Sky247 and TigerExch pages.
-export const SKY_DEFAULT_BRAND = "#474747"; // dark grey — same as the saved Sky header
+export const SKY_DEFAULT_BRAND = "#FFB600"; // gold — matches the first Sky variant (Yl01 Classic Gold)
 export const TIGER_DEFAULT_BRAND = "#cc0a00"; // red — same as the saved Tiger nav
 
 // Sky design shop — 20 variants imported DIRECTLY from the boss's Notion

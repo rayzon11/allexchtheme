@@ -62,6 +62,14 @@ export default function MainGallery({ activeTheme, brand, setBrand, onTigerPrevi
                     onClick={() => onCardClick(p)}
                     title={p.code ? `${p.code} ${p.name}` : p.name}
                   >
+                    <span
+                      className="main-card-colorbar"
+                      style={{
+                        background: p.accent
+                          ? `linear-gradient(90deg, ${p.brand} 0%, ${p.brand} 62%, ${p.accent} 62%, ${p.accent} 100%)`
+                          : p.brand,
+                      }}
+                    />
                     <span className="main-card-preview">
                       {p.preview ? (
                         <img src={p.preview} alt={p.name} />
