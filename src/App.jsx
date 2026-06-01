@@ -70,6 +70,7 @@ export default function App() {
         <main className="app-canvas">
           <MainGallery
             activeTheme={config.activeTheme}
+            setActiveTheme={config.setActiveTheme}
             selectedCode={config.selectedCode}
             onSelectVariant={(preset) => {
               config.selectVariant(preset);

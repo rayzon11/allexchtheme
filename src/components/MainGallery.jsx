@@ -3,14 +3,20 @@ import {
   SKY_PRESETS,
   TIGER_PRESETS,
   SKY_GROUP_COLOURS,
+  THEMES,
 } from "../hooks/useConfig";
+
+const VARIANT_COUNT = { sky: SKY_PRESETS.length, tiger: TIGER_PRESETS.length };
 
 /**
  * Notion-style gallery on the left side of the workspace. Click a card →
  * the selected variant updates (brand applies + right panel shows that
  * variant's full design). No inline expansion — everything lives on the right.
+ *
+ * A white-label PRODUCT switcher sits at the top so the customer can jump
+ * between brands (Sky Exchange, Tiger Exch, + upcoming) like a marketplace.
  */
-export default function MainGallery({ activeTheme, selectedCode, onSelectVariant }) {
+export default function MainGallery({ activeTheme, setActiveTheme, selectedCode, onSelectVariant }) {
   const isSky = activeTheme === "sky";
 
   const groups = useMemo(() => {
@@ -25,16 +31,66 @@ export default function MainGallery({ activeTheme, selectedCode, onSelectVariant
     onSelectVariant?.(p);
   };
 
+  const activeProduct = THEMES.find((t) => t.id === activeTheme) || THEMES[0];
+
   return (
     <div className="gallery-page">
+      {/* WHITE-LABEL PRODUCT SWITCHER */}
+      <section className="product-switcher">
+        <header className="product-switcher-head">
+          <div>
+            <span className="product-switcher-eyebrow">White-label products</span>
+            <h2>Choose a platform</h2>
+          </div>
+          <span className="product-switcher-count">{THEMES.length} products</span>
+        </header>
+        <div className="product-rail">
+          {THEMES.map((t) => {
+            const count = VARIANT_COUNT[t.id];
+            const active = t.id === activeTheme;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                className={`product-card${active ? " active" : ""}${t.live ? "" : " soon"}`}
+                onClick={() => t.live && setActiveTheme?.(t.id)}
+                disabled={!t.live}
+              >
+                <span className="product-card-cover">
+                  <img src={t.cover} alt={t.name} loading="lazy" />
+                  {!t.live && <span className="product-card-badge">Soon</span>}
+                  {active && <span className="product-card-badge active">● Active</span>}
+                </span>
+                <span className="product-card-body">
+                  <strong>{t.name}</strong>
+                  <small>{t.tagline}</small>
+                  <span className="product-card-meta">
+                    <span className="product-card-cat">{t.category}</span>
+                    {count ? <span className="product-card-variants">{count} colours</span> : null}
+                  </span>
+                </span>
+              </button>
+            );
+          })}
+          {/* Placeholder "more coming" slot so the rail reads as a growing catalogue */}
+          <div className="product-card placeholder" aria-hidden="true">
+            <span className="product-card-cover ghost">+</span>
+            <span className="product-card-body">
+              <strong>More soon</strong>
+              <small>New platforms added regularly</small>
+            </span>
+          </div>
+        </div>
+      </section>
+
       <header className="gallery-page-head">
         <div>
-          <h1>{isSky ? "Sky Theme" : "Tiger Theme"}</h1>
+          <h1>{activeProduct.name}</h1>
           <p>Tap any design — full preview and customizer open on the right.</p>
         </div>
         <div className="gallery-page-pill">
           <span className="gallery-page-pill-dot" />
-          Gallery
+          {VARIANT_COUNT[activeTheme]} designs
         </div>
       </header>
 
