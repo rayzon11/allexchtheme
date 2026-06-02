@@ -181,7 +181,6 @@ export default function MainGallery({ activeTheme, setActiveTheme, selectedCode,
         </div>
         <div className="site-footer-trust">
           <span>🔒 Secure &amp; reliable</span>
-          <span>⚡ Same-day setup</span>
           <span>💬 24/7 support</span>
         </div>
         <p className="site-footer-legal">
