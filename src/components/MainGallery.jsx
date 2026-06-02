@@ -139,37 +139,6 @@ export default function MainGallery({ activeTheme, setActiveTheme, selectedCode,
         );
       })}
 
-      {/* HOW IT WORKS — builds confidence in the process */}
-      <section className="how">
-        <header className="how-head">
-          <span className="how-eyebrow">How it works</span>
-          <h2>Live in 3 simple steps</h2>
-        </header>
-        <div className="how-grid">
-          <div className="how-step">
-            <span className="how-num">1</span>
-            <strong>Pick a platform</strong>
-            <p>Choose a proven Sky or Tiger design from {THEMES.length} live platforms.</p>
-          </div>
-          <div className="how-step">
-            <span className="how-num">2</span>
-            <strong>Make it yours</strong>
-            <p>Set your brand colour, drop in your logo, and preview every page instantly.</p>
-          </div>
-          <div className="how-step">
-            <span className="how-num">3</span>
-            <strong>Go live</strong>
-            <p>We deploy your fully-managed site — mobile-perfect and ready for players.</p>
-          </div>
-        </div>
-        <div className="how-cta">
-          <button type="button" className="hero-cta-primary" onClick={onRequest}>
-            🚀 Get my site now
-          </button>
-          <span className="how-cta-note">No setup fee surprises · Same-day delivery</span>
-        </div>
-      </section>
-
       {/* FOOTER */}
       <footer className="site-footer">
         <div className="site-footer-brand">
