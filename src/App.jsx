@@ -3,6 +3,7 @@ import DesignPanel from "./components/DesignPanel";
 import MainGallery from "./components/MainGallery";
 import OrderModal from "./components/OrderModal";
 import PreviewOverlay from "./components/PreviewOverlay";
+import ProductModal from "./components/ProductModal";
 import ThemeSelector from "./components/ThemeSelector";
 import { useConfig, TIGER_PRESETS } from "./hooks/useConfig";
 import "./App.css";
@@ -12,6 +13,7 @@ export default function App() {
   const [orderOpen, setOrderOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [mobileSettingsOpen, setMobileSettingsOpen] = useState(false);
+  const [productVariant, setProductVariant] = useState(null);
 
   const tigerVariantName = TIGER_PRESETS.find(
     (p) => p.brand.toLowerCase() === config.brand?.toLowerCase()
@@ -75,11 +77,8 @@ export default function App() {
             onRequest={() => setOrderOpen(true)}
             onSelectVariant={(preset) => {
               config.selectVariant(preset);
-              // Picking a card on mobile auto-opens the sheet so the customer
-              // immediately sees the preview + customize controls.
-              if (window.matchMedia("(max-width: 820px)").matches) {
-                setMobileSettingsOpen(true);
-              }
+              // Clicking a card opens the full Amazon-style product view.
+              setProductVariant(preset);
             }}
           />
         </main>
@@ -98,6 +97,19 @@ export default function App() {
           onMobileToggle={() => setMobileSettingsOpen((v) => !v)}
         />
       </div>
+
+      <ProductModal
+        variant={productVariant}
+        isSky={config.activeTheme === "sky"}
+        onClose={() => setProductVariant(null)}
+        onRequest={() => { setProductVariant(null); setOrderOpen(true); }}
+        onCustomize={() => {
+          setProductVariant(null);
+          if (window.matchMedia("(max-width: 820px)").matches) {
+            setMobileSettingsOpen(true);
+          }
+        }}
+      />
 
       <PreviewOverlay
         isOpen={previewOpen}
