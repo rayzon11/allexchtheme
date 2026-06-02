@@ -230,9 +230,9 @@ export default function MainGallery({ activeTheme, setActiveTheme, selectedCode,
       {/* FOOTER */}
       <footer className="site-footer">
         <div className="site-footer-brand">
-          <div className="app-mark">A</div>
+          <div className="app-mark"><img src="/brand-logo.png" alt="AllThemeExch" /></div>
           <div>
-            <strong>allexchtheme</strong>
+            <strong>ALLTHEMEEXCH</strong>
             <small>White-label gaming platforms, done right.</small>
           </div>
         </div>

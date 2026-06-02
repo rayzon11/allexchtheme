@@ -405,8 +405,8 @@ export function useConfig() {
   const selectedCode = selectedCodeByTheme[activeTheme];
 
   useEffect(() => {
-    document.title = siteName || "White Label Configurator";
-  }, [siteName]);
+    document.title = "AllThemeExch — White-label Gaming Platforms";
+  }, []);
 
   // Push brand colour to a single CSS variable.
   useEffect(() => {

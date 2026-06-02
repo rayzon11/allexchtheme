@@ -35,10 +35,10 @@ export default function App() {
     <div className="app-shell">
       <header className="app-topbar">
         <div className="app-topbar-left">
-          <div className="app-mark">A</div>
+          <div className="app-mark"><img src="/brand-logo.png" alt="AllThemeExch" /></div>
           <div className="app-title">
-            <strong>allexchtheme</strong>
-            <small>white-label theme gallery</small>
+            <strong>ALLTHEMEEXCH</strong>
+            <small>Gaming Provider</small>
           </div>
         </div>
 

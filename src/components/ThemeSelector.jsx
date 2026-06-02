@@ -75,7 +75,7 @@ export default function ThemeSelector({ activeTheme, setActiveTheme }) {
         <div className="shop-modal" role="dialog" aria-label="Theme marketplace">
           <header className="shop-top">
             <div className="shop-top-brand">
-              <div className="app-mark">A</div>
+              <div className="app-mark"><img src="/brand-logo.png" alt="AllThemeExch" /></div>
               <div>
                 <strong>Theme Shop</strong>
                 <small>{liveCount} live · {total - liveCount} coming soon</small>
