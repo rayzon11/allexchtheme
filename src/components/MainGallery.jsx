@@ -19,10 +19,6 @@ const VARIANT_COUNT = { sky: SKY_PRESETS.length, tiger: TIGER_PRESETS.length };
 export default function MainGallery({ activeTheme, setActiveTheme, selectedCode, onSelectVariant, onRequest }) {
   const isSky = activeTheme === "sky";
 
-  const scrollToGallery = () => {
-    document.getElementById("designs")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
   const groups = useMemo(() => {
     const order = ["Yellow", "Green", "Orange", "Red", "Blue", "Purple", "White"];
     const list = isSky ? SKY_PRESETS : TIGER_PRESETS;
@@ -39,59 +35,6 @@ export default function MainGallery({ activeTheme, setActiveTheme, selectedCode,
 
   return (
     <div className="gallery-page">
-      {/* HERO — instant value proposition + trust */}
-      <section className="hero">
-        <div className="hero-glow" aria-hidden="true" />
-        <div className="hero-inner">
-          <span className="hero-badge">
-            <span className="hero-badge-dot" /> Trusted white-label gaming platforms
-          </span>
-          <h1 className="hero-title">
-            Launch your own <span className="hero-title-grad">betting exchange</span><br />
-            ready in hours — not months
-          </h1>
-          <p className="hero-sub">
-            Pick a proven Sky&nbsp;Exchange or Tiger&nbsp;Exch design, drop in your
-            brand and colours, and go live. Pixel-perfect, mobile-ready, and fully
-            managed for you.
-          </p>
-          <div className="hero-actions">
-            <button type="button" className="hero-cta-primary" onClick={onRequest}>
-              🚀 Get my site
-            </button>
-            <button type="button" className="hero-cta-ghost" onClick={scrollToGallery}>
-              Browse {THEMES.length} platforms ↓
-            </button>
-          </div>
-          <ul className="hero-trust">
-            <li>✓ Same-day setup</li>
-            <li>✓ 40+ colour themes</li>
-            <li>✓ 100% mobile-perfect</li>
-            <li>✓ Dedicated support</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* TRUST / STATS STRIP */}
-      <section className="trust-strip">
-        <div className="trust-stat">
-          <strong>200+</strong>
-          <span>Brands launched</span>
-        </div>
-        <div className="trust-stat">
-          <strong>2</strong>
-          <span>Proven platforms</span>
-        </div>
-        <div className="trust-stat">
-          <strong>40+</strong>
-          <span>Ready colour themes</span>
-        </div>
-        <div className="trust-stat">
-          <strong>24/7</strong>
-          <span>Support &amp; uptime</span>
-        </div>
-      </section>
-
       {/* WHITE-LABEL PRODUCT SWITCHER */}
       <section className="product-switcher" id="designs">
         <header className="product-switcher-head">
