@@ -124,6 +124,7 @@ export default function App() {
         activeTheme={config.activeTheme}
         siteName={config.siteName}
         logoSrc={config.logoSrc}
+        hasCustomLogo={config.hasCustomLogo}
         brand={config.brand}
       />
     </div>

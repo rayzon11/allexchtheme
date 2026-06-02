@@ -6,6 +6,7 @@ export default function OrderModal({
   activeTheme,
   siteName,
   logoSrc,
+  hasCustomLogo,
   brand,
   domain,
 }) {
@@ -79,13 +80,15 @@ export default function OrderModal({
               </div>
               <div className="order-summary-line">
                 <span className="label">Logo</span>
-                {logoSrc ? (
+                {hasCustomLogo ? (
                   <span className="order-logo-preview">
-                    <img src={logoSrc} alt="logo" />
+                    <img src={logoSrc} alt="Your logo" />
                     <span className="val" style={{ fontSize: 11 }}>Uploaded ✓</span>
                   </span>
                 ) : (
-                  <span className="val" style={{ color: "#94a3b8", fontWeight: 500 }}>No logo</span>
+                  <span className="val" style={{ color: "#948d83", fontWeight: 500 }}>
+                    Your logo (add yours)
+                  </span>
                 )}
               </div>
             </div>
