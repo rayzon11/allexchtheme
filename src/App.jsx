@@ -15,12 +15,12 @@ const SCREENS = [
 // Plain descriptions of what each platform looks like.
 const PRODUCT_COPY = {
   sky: "Bright classic exchange with sports tiles and a casino lobby.",
-  tiger: "Dark sportsbook with a match slider and casino rows.",
+  tiger: "Exchange with a left menu, live odds table and a casino row.",
   reddy: "Dark modern lobby with a side menu, bet slip and game rows.",
 };
 
 // Body style of each platform, for the compare table.
-const PRODUCT_LOOK = { sky: "Light", tiger: "Dark", reddy: "Dark" };
+const PRODUCT_LOOK = { sky: "Light", tiger: "Light", reddy: "Dark" };
 
 const GROUP_ORDER = ["Yellow", "Green", "Orange", "Red", "Blue", "Purple", "White"];
 

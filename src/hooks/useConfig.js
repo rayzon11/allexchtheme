@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 // Brand colour per theme. Defaults match the saved HTML appearance so the app opens
 // looking exactly like the original Sky247 and TigerExch pages.
 export const SKY_DEFAULT_BRAND = "#FFB600"; // gold — matches the first Sky variant (Yl01 Classic Gold)
-export const TIGER_DEFAULT_BRAND = "#FFB600"; // gold — matches the first Tiger variant (Yl01)
+export const TIGER_DEFAULT_BRAND = "#D9AD42"; // gold — matches the first Tiger variant (Yl01)
 
 // Sky design shop — 20 variants imported DIRECTLY from the boss's Notion
 // gallery. Both `brand` (primary) and `accent` (secondary) hex codes are
@@ -124,9 +124,9 @@ export const THEMES = [
   {
     id: "tiger",
     name: "Tiger Exch",
-    tagline: "Dark, bold sportsbook + casino UI",
+    tagline: "Exchange with left menu, odds table and casino row",
     category: "Exchange",
-    cover: "/shop/tiger-yl01-desktop.jpg?v=2",
+    cover: "/shop/tiger-og01-desktop.jpg?v=3",
     live: true,
   },
   {
@@ -162,60 +162,31 @@ export const THEMES = [
 //   tiger-<code>-mobile-login.jpg         login (mobile)
 //   tiger-<code>-mobile-after-login.jpg   logged in (mobile)
 export const TIGER_PRESETS = [
-  // ── YELLOW ──
-  { code: "Yl01", name: "Classic Gold", brand: "#FFB600", accent: "#68C092", group: "Yellow", preview: "/shop/tiger-yl01-desktop.jpg?v=2" },
-  { code: "Yl02", name: "Cream",        brand: "#FFE8A3", accent: "#68C092", group: "Yellow", preview: "/shop/tiger-yl02-desktop.jpg?v=2" },
-  { code: "Yl03", name: "Gold Navy",    brand: "#FFB600", accent: "#1D3557", group: "Yellow", preview: "/shop/tiger-yl03-desktop.jpg?v=2" },
+  // Tiger Exchange 247 — the colour paints the header and the left menu
+  // (the bottom bar on mobile). Home is the exchange page, rendered from the
+  // saved copy in /public/tiger; Login is the real login box of the live site.
+  { code: "Yl01", name: "Classic Gold", brand: "#D9AD42", group: "Yellow" },
+  { code: "Gn02", name: "Forest Green", brand: "#15573C", group: "Green"  },
+  { code: "Gn03", name: "Mint",         brand: "#A4E2C5", group: "Green"  },
+  { code: "Og01", name: "Orange",       brand: "#DE6D21", group: "Orange" },
+  { code: "Rd01", name: "Dark Red",     brand: "#821D2E", group: "Red"    },
+  { code: "Bu01", name: "Royal Blue",   brand: "#264EA4", group: "Blue"   },
+  { code: "Pl01", name: "Deep Purple",  brand: "#512B78", group: "Purple" },
+  { code: "Wt01", name: "Silver",       brand: "#C4CCD6", group: "White"  },
+].map((p) => ({ ...p, accent: "#F58220", preview: "/shop/tiger-" + p.code.toLowerCase() + "-desktop.jpg?v=3" }));
 
-  // ── GREEN ──
-  { code: "Gn01", name: "Bright Green", brand: "#03B44F", accent: "#307234", group: "Green",  preview: "/shop/tiger-gn01-desktop.jpg?v=2" },
-  { code: "Gn02", name: "Forest",       brand: "#15805E", accent: "#343A40", group: "Green",  preview: "/shop/tiger-gn02-desktop.jpg?v=2" },
-  { code: "Gn03", name: "Mint",         brand: "#68C092", accent: "#588157", group: "Green",  preview: "/shop/tiger-gn03-desktop.jpg?v=2" },
-  { code: "Gn04", name: "Olive Gold",   brand: "#486F05", accent: "#FFB600", group: "Green",  preview: "/shop/tiger-gn04-desktop.jpg?v=2" },
-
-  // ── ORANGE ──
-  { code: "Og01", name: "Orange",       brand: "#F37335", accent: "#6C757D", group: "Orange", preview: "/shop/tiger-og01-desktop.jpg?v=2" },
-  { code: "Og02", name: "Tomato Blue",  brand: "#F1592A", accent: "#066BC1", group: "Orange", preview: "/shop/tiger-og02-desktop.jpg?v=2" },
-
-  // ── RED ──
-  { code: "Rd01", name: "Dark Red",     brand: "#920000", accent: "#000000", group: "Red",    preview: "/shop/tiger-rd01-desktop.jpg?v=2" },
-  { code: "Rd02", name: "Maroon Gold",  brand: "#810000", accent: "#D4AF37", group: "Red",    preview: "/shop/tiger-rd02-desktop.jpg?v=2" },
-  { code: "Rd03", name: "Wine",         brand: "#36010B", accent: "#9B001D", group: "Red",    preview: "/shop/tiger-rd03-desktop.jpg?v=2" },
-
-  // ── BLUE ──
-  { code: "Bu01", name: "Royal Blue",   brand: "#005DAC", accent: "#00C2FF", group: "Blue",   preview: "/shop/tiger-bu01-desktop.jpg?v=2" },
-  { code: "Bu02", name: "Cobalt Sky",   brand: "#005DAC", accent: "#E6F0FA", group: "Blue",   preview: "/shop/tiger-bu02-desktop.jpg?v=2" },
-  { code: "Bu03", name: "Navy Gold",    brand: "#01294B", accent: "#D4AF37", group: "Blue",   preview: "/shop/tiger-bu03-desktop.jpg?v=2" },
-
-  // ── PURPLE ──
-  { code: "Pl01", name: "Deep Purple",  brand: "#400078", accent: "#DD8543", group: "Purple", preview: "/shop/tiger-pl01-desktop.jpg?v=2" },
-  { code: "Pl02", name: "Lavender",     brand: "#6A4C93", accent: "#400078", group: "Purple", preview: "/shop/tiger-pl02-desktop.jpg?v=2" },
-
-  // ── WHITE / SILVER ──
-  { code: "Wt01", name: "Silver Navy",  brand: "#E4E4E4", accent: "#1D3558", group: "White",  preview: "/shop/tiger-wt01-desktop.jpg?v=2" },
-  { code: "Wt02", name: "Steel Grey",   brand: "#A5A5A5", accent: "#6182B7", group: "White",  preview: "/shop/tiger-wt02-desktop.jpg?v=2" },
-  { code: "Wt03", name: "Pearl Slate",  brand: "#E4E4E4", accent: "#1B303B", group: "White",  preview: "/shop/tiger-wt03-desktop.jpg?v=2" },
-];
-
-// Per-variant Tiger captures for the swipe carousel (keyed by preset code).
 export const TIGER_VIEWS = Object.fromEntries(
   TIGER_PRESETS.map((p) => {
     const base = "/shop/tiger-" + p.code.toLowerCase();
     return [p.code, {
-      desktopHome:       base + "-desktop.jpg?v=2",
-      desktopLogin:      base + "-desktop-login.jpg?v=2",
-      desktopAfterLogin: base + "-desktop-after-login.jpg?v=2",
-      mobileHome:        base + "-mobile.jpg?v=2",
-      mobileLogin:       base + "-mobile-login.jpg?v=2",
-      mobileAfterLogin:  base + "-mobile-after-login.jpg?v=2",
+      desktopHome:  base + "-desktop.jpg?v=3",
+      desktopLogin: base + "-desktop-login.jpg?v=3",
+      mobileHome:   base + "-mobile.jpg?v=3",
+      mobileLogin:  base + "-mobile-login.jpg?v=3",
     }];
   })
 );
 
-// Per-theme default logo — auto-applied when nothing is uploaded.
-// Sky's original page renders just styled text, so we use a faithful SKY247-style SVG.
-// Tiger's original page uses real PNG logos saved in the asset folder.
-// Real Sky247 logo from the saved login HTML's asset folder.
 // Reddy247 — 8 header-colour variants. Captures are real screenshots of the
 // live Reddy247 platform (desktop + mobile, home + login) with the header
 // repainted per variant. No after-login capture (needs an account).
