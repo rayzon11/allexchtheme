@@ -2531,3 +2531,180 @@ body {
 @media (max-width: 400px) {
   .main-grid { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   2026-11 gallery upgrade — colour filter, device-duo cards,
+   Reddy247 product. Appended last so it wins the cascade.
+   ============================================================ */
+.product-card-badge.new {
+  background: linear-gradient(135deg, #ff5a3c, #ffb347);
+  color: #1c1108;
+  box-shadow: 0 0 0 3px rgba(255, 120, 60, 0.22);
+  animation: badge-pulse 2.2s ease-in-out infinite;
+}
+@keyframes badge-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(255, 120, 60, 0.22); }
+  50% { box-shadow: 0 0 0 7px rgba(255, 120, 60, 0); }
+}
+
+.colour-filter {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+  padding: 10px 2px;
+  margin: -6px 0 -4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: linear-gradient(180deg, var(--c-bg-0) 72%, transparent);
+}
+.colour-filter::-webkit-scrollbar { display: none; }
+.colour-chip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--c-line);
+  background: var(--c-bg-1);
+  color: var(--c-text-soft);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, transform 0.15s;
+}
+.colour-chip i { width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(255,255,255,0.08); }
+.colour-chip b { font-weight: 700; font-size: 11px; color: var(--c-text-muted); }
+.colour-chip:hover { border-color: var(--c-line-strong); color: var(--c-text); }
+.colour-chip:active { transform: scale(0.96); }
+.colour-chip.active {
+  background: var(--grad-accent);
+  border-color: transparent;
+  color: #1c1108;
+}
+.colour-chip.active b { color: rgba(28, 17, 8, 0.7); }
+.colour-chip:focus-visible, .main-card:focus-visible {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 2px;
+}
+
+.main-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.main-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  animation: card-in 0.35s ease both;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.main-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--card-brand, var(--c-accent));
+  z-index: 2;
+}
+.main-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--card-brand, var(--c-accent));
+  box-shadow: 0 18px 40px rgba(0,0,0,0.5), 0 0 0 1px var(--card-brand, var(--c-accent));
+}
+.main-card-preview {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #0d0c0b;
+}
+.main-card-preview > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+  transition: transform 0.45s ease;
+}
+.main-card:hover .main-card-preview > img { transform: scale(1.04); }
+.main-card-phone {
+  position: absolute;
+  right: 5%;
+  bottom: -9%;
+  width: 23%;
+  aspect-ratio: 9 / 18;
+  border-radius: 12px;
+  border: 3px solid #0b0b0b;
+  outline: 1px solid rgba(255,255,255,0.22);
+  overflow: hidden;
+  background: #000;
+  box-shadow: -10px 10px 26px rgba(0,0,0,0.65);
+  transition: transform 0.3s ease;
+}
+.main-card-phone img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.main-card:hover .main-card-phone { transform: translateY(-8%); }
+.main-card-active {
+  position: absolute;
+  top: 12px;
+  left: 10px;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--grad-accent);
+  color: #1c1108;
+  font-size: 11px;
+  font-weight: 800;
+  z-index: 3;
+}
+.main-card-view {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(10,10,10,0.82);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.main-card:hover .main-card-view { opacity: 1; transform: none; }
+.main-card-foot { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
+.main-card-tag { flex: 0 0 auto; width: 26px; height: 26px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25); }
+.main-card-title { display: flex; flex-direction: column; min-width: 0; text-align: left; }
+.main-card-title strong { font-size: 14px; color: var(--c-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.main-card-title small { font-size: 11px; color: var(--c-text-muted); letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 1100px) {
+  .main-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .main-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .main-card { border-radius: 12px; }
+  .main-card-foot { padding: 9px 10px; gap: 8px; }
+  .main-card-tag { width: 20px; height: 20px; border-radius: 6px; }
+  .main-card-title strong { font-size: 12.5px; }
+  .main-card-title small { font-size: 10px; }
+  .main-card-view { display: none; }
+  .main-card-phone { border-width: 2px; border-radius: 7px; width: 25%; }
+  .main-card-active { top: 9px; left: 7px; font-size: 10px; padding: 3px 8px; }
+  .colour-filter { margin-inline: -4px; padding-inline: 4px; }
+  /* keep the last row clear of the bottom customize sheet */
+  .gallery-page { padding-bottom: 96px; }
+}
+@media (max-width: 400px) {
+  .main-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .main-card, .product-card-badge.new { animation: none; }
+  .main-card, .main-card-preview > img, .main-card-phone { transition: none; }
+}

@@ -1,10 +1,7 @@
 import { useMemo } from "react";
 import LogoUpload from "./LogoUpload";
 import {
-  SKY_PRESETS,
-  TIGER_PRESETS,
-  SKY_VIEWS,
-  TIGER_VIEWS,
+  getProduct,
 } from "../hooks/useConfig";
 
 /**
@@ -29,10 +26,10 @@ export default function DesignPanel({
   mobileOpen,
   onMobileToggle,
 }) {
-  const isSky = activeTheme === "sky";
+  const product = getProduct(activeTheme);
 
   const variant = useMemo(() => {
-    const list = isSky ? SKY_PRESETS : TIGER_PRESETS;
+    const list = product.presets;
     // Match by the selected variant CODE first (several variants share a hex);
     // fall back to brand-colour match, then the first variant.
     return (
@@ -40,11 +37,11 @@ export default function DesignPanel({
       list.find((p) => p.brand.toLowerCase() === brand?.toLowerCase()) ||
       list[0]
     );
-  }, [isSky, selectedCode, brand]);
+  }, [product, selectedCode, brand]);
 
   const slides = useMemo(() => {
     if (!variant) return [];
-    const views = (isSky ? SKY_VIEWS : TIGER_VIEWS)[variant.code] || {};
+    const views = product.views[variant.code] || {};
     return [
       { kind: "desktop", label: "Desktop · Home",        src: views.desktopHome       || variant.preview },
       { kind: "desktop", label: "Desktop · Login",       src: views.desktopLogin },
@@ -53,7 +50,7 @@ export default function DesignPanel({
       { kind: "mobile",  label: "Mobile · Login",        src: views.mobileLogin },
       { kind: "mobile",  label: "Mobile · After login",  src: views.mobileAfterLogin },
     ].filter((s) => s.src);
-  }, [variant, isSky]);
+  }, [variant, product]);
 
   return (
     <aside className={`design-panel${mobileOpen ? " mobile-open" : ""}`}>
@@ -82,7 +79,7 @@ export default function DesignPanel({
           )}
           <div className="design-head-text">
             <strong>{variant?.name || "Pick a design"}</strong>
-            <small>{mobileOpen ? "Tap ▼ to collapse" : `${isSky ? "Sky" : "Tiger"} · tap to customize`}</small>
+            <small>{mobileOpen ? "Tap ▼ to collapse" : `${product.short} · tap to customize`}</small>
           </div>
         </div>
         <button

@@ -1,12 +1,14 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
-  SKY_PRESETS,
-  TIGER_PRESETS,
   SKY_GROUP_COLOURS,
   THEMES,
+  PRODUCTS,
+  getProduct,
 } from "../hooks/useConfig";
 
-const VARIANT_COUNT = { sky: SKY_PRESETS.length, tiger: TIGER_PRESETS.length };
+const VARIANT_COUNT = Object.fromEntries(
+  Object.entries(PRODUCTS).map(([id, p]) => [id, p.presets.length])
+);
 
 /**
  * Notion-style gallery on the left side of the workspace. Click a card →
@@ -17,15 +19,21 @@ const VARIANT_COUNT = { sky: SKY_PRESETS.length, tiger: TIGER_PRESETS.length };
  * between brands (Sky Exchange, Tiger Exch, + upcoming) like a marketplace.
  */
 export default function MainGallery({ activeTheme, setActiveTheme, selectedCode, onSelectVariant, onRequest }) {
-  const isSky = activeTheme === "sky";
-
   const groups = useMemo(() => {
     const order = ["Yellow", "Green", "Orange", "Red", "Blue", "Purple", "White"];
-    const list = isSky ? SKY_PRESETS : TIGER_PRESETS;
+    const list = getProduct(activeTheme).presets;
     const buckets = {};
     list.forEach((p) => { (buckets[p.group || "Other"] ||= []).push(p); });
     return order.filter((g) => buckets[g]).map((g) => ({ group: g, items: buckets[g] }));
-  }, [isSky]);
+  }, [activeTheme]);
+
+  const [filter, setFilter] = useState("All");
+  useEffect(() => { setFilter("All"); }, [activeTheme]);
+  const views = getProduct(activeTheme).views;
+  const visible = useMemo(
+    () => groups.filter((g) => filter === "All" || g.group === filter).flatMap((g) => g.items),
+    [groups, filter]
+  );
 
   const onCardClick = (p) => {
     onSelectVariant?.(p);
@@ -60,6 +68,7 @@ export default function MainGallery({ activeTheme, setActiveTheme, selectedCode,
                   <img src={t.cover} alt={t.name} loading="lazy" />
                   {!t.live && <span className="product-card-badge">Soon</span>}
                   {active && <span className="product-card-badge active">● Active</span>}
+                  {!active && t.isNew && <span className="product-card-badge new">New</span>}
                 </span>
                 <span className="product-card-body">
                   <strong>{t.name}</strong>
@@ -86,7 +95,7 @@ export default function MainGallery({ activeTheme, setActiveTheme, selectedCode,
       <header className="gallery-page-head">
         <div>
           <h1>{activeProduct.name}</h1>
-          <p>Tap any design — full preview and customizer open on the right.</p>
+          <p>Tap any design to see every screen — desktop, mobile and login.</p>
         </div>
         <div className="gallery-page-pill">
           <span className="gallery-page-pill-dot" />
@@ -94,50 +103,66 @@ export default function MainGallery({ activeTheme, setActiveTheme, selectedCode,
         </div>
       </header>
 
-      {groups.map(({ group, items }) => {
-        const groupColour = SKY_GROUP_COLOURS[group] || "#cc0a00";
-        return (
-          <section key={group} className="main-group">
-            <header className="main-group-head">
-              <span className="main-group-pill" style={{ background: `${groupColour}22`, color: groupColour }}>
-                <i style={{ background: groupColour }} /> {group}
+      {/* COLOUR FILTER — sticky so it stays reachable while scrolling */}
+      <nav className="colour-filter" aria-label="Filter designs by colour">
+        <button
+          type="button"
+          className={`colour-chip${filter === "All" ? " active" : ""}`}
+          onClick={() => setFilter("All")}
+        >
+          All <b>{VARIANT_COUNT[activeTheme]}</b>
+        </button>
+        {groups.map(({ group, items }) => (
+          <button
+            key={group}
+            type="button"
+            className={`colour-chip${filter === group ? " active" : ""}`}
+            onClick={() => setFilter(group)}
+          >
+            <i style={{ background: SKY_GROUP_COLOURS[group] || "#cc0a00" }} />
+            {group} <b>{items.length}</b>
+          </button>
+        ))}
+      </nav>
+
+      <div className="main-grid" key={activeTheme + filter}>
+        {visible.map((p, i) => {
+          const active = p.code === selectedCode;
+          const mobileShot = views[p.code]?.mobileHome;
+          return (
+            <button
+              key={p.code || p.name}
+              type="button"
+              className={`main-card${active ? " active" : ""}`}
+              style={{ "--card-brand": p.brand, animationDelay: `${Math.min(i, 8) * 35}ms` }}
+              onClick={() => onCardClick(p)}
+              title={`${p.code} ${p.name}`}
+            >
+              <span className="main-card-preview">
+                {p.preview ? (
+                  <img src={p.preview} alt={`${p.name} desktop`} loading="lazy" />
+                ) : (
+                  <span className="main-card-mock" style={{ background: p.brand }} />
+                )}
+                {mobileShot && (
+                  <span className="main-card-phone">
+                    <img src={mobileShot} alt="" loading="lazy" />
+                  </span>
+                )}
+                {active && <span className="main-card-active">✓ Selected</span>}
+                <span className="main-card-view">View design →</span>
               </span>
-              <span className="main-group-count">{items.length}</span>
-            </header>
-            <div className="main-grid">
-              {items.map((p) => {
-                const active = p.code === selectedCode;
-                return (
-                  <button
-                    key={p.code || p.name}
-                    type="button"
-                    className={`main-card${active ? " active" : ""}`}
-                    onClick={() => onCardClick(p)}
-                    title={p.code ? `${p.code} ${p.name}` : p.name}
-                  >
-                    <span className="main-card-preview">
-                      {p.preview ? (
-                        <img src={p.preview} alt={p.name} />
-                      ) : (
-                        <span className="main-card-mock" style={{ background: p.brand }} />
-                      )}
-                    </span>
-                    <span className="main-card-foot">
-                      <span
-                        className="main-card-tag"
-                        style={{ background: p.brand }}
-                        title={p.brand}
-                      />
-                      <span className="main-card-code">{p.code || p.name}</span>
-                      {active && <span className="main-card-active">✓</span>}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-        );
-      })}
+              <span className="main-card-foot">
+                <span className="main-card-tag" style={{ background: p.brand }} />
+                <span className="main-card-title">
+                  <strong>{p.name}</strong>
+                  <small>{p.code} · {p.brand.toUpperCase()}</small>
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
 
       {/* FOOTER */}
       <footer className="site-footer">

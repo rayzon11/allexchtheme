@@ -125,6 +125,15 @@ export const THEMES = [
     cover: "/shop/tiger-yl01-desktop.png",
     live: true,
   },
+  {
+    id: "reddy",
+    name: "Reddy247",
+    tagline: "Modern dark exchange + casino lobby",
+    category: "Exchange",
+    cover: "/shop/reddy-og01-desktop.jpg",
+    live: true,
+    isNew: true,
+  },
 
   // ── More themes go here. Boss will add them when ready. ──
   // Example shape:
@@ -203,6 +212,42 @@ export const TIGER_VIEWS = Object.fromEntries(
 // Sky's original page renders just styled text, so we use a faithful SKY247-style SVG.
 // Tiger's original page uses real PNG logos saved in the asset folder.
 // Real Sky247 logo from the saved login HTML's asset folder.
+// Reddy247 — 8 header-colour variants. Captures are real screenshots of the
+// live Reddy247 platform (desktop + mobile, home + login) with the header
+// repainted per variant. No after-login capture (needs an account).
+export const REDDY_ACCENT = "#F7941D";
+export const REDDY_PRESETS = [
+  { code: "Yl01", name: "Classic Gold", brand: "#D9AD42", accent: REDDY_ACCENT, group: "Yellow" },
+  { code: "Gn02", name: "Forest",       brand: "#15573C", accent: REDDY_ACCENT, group: "Green"  },
+  { code: "Gn03", name: "Mint",         brand: "#A4E2C5", accent: REDDY_ACCENT, group: "Green"  },
+  { code: "Og01", name: "Orange",       brand: "#DE6D21", accent: REDDY_ACCENT, group: "Orange" },
+  { code: "Rd01", name: "Dark Red",     brand: "#821D2E", accent: REDDY_ACCENT, group: "Red"    },
+  { code: "Bu01", name: "Royal Blue",   brand: "#264EA4", accent: REDDY_ACCENT, group: "Blue"   },
+  { code: "Pl01", name: "Deep Purple",  brand: "#512B78", accent: REDDY_ACCENT, group: "Purple" },
+  { code: "Wt01", name: "Silver Navy",  brand: "#C4CCD6", accent: REDDY_ACCENT, group: "White"  },
+].map((p) => ({ ...p, preview: "/shop/reddy-" + p.code.toLowerCase() + "-desktop.jpg" }));
+
+export const REDDY_VIEWS = Object.fromEntries(
+  REDDY_PRESETS.map((p) => {
+    const base = "/shop/reddy-" + p.code.toLowerCase();
+    return [p.code, {
+      desktopHome:  base + "-desktop.jpg",
+      desktopLogin: base + "-desktop-login.jpg",
+      mobileHome:   base + "-mobile.jpg",
+      mobileLogin:  base + "-mobile-login.jpg",
+    }];
+  })
+);
+
+// One lookup for every product — components read presets/views/labels from
+// here instead of branching on the theme id.
+export const PRODUCTS = {
+  sky:   { name: "Sky Exchange", short: "Sky",   presets: SKY_PRESETS,   views: SKY_VIEWS },
+  tiger: { name: "Tiger Exch",   short: "Tiger", presets: TIGER_PRESETS, views: TIGER_VIEWS },
+  reddy: { name: "Reddy247",     short: "Reddy", presets: REDDY_PRESETS, views: REDDY_VIEWS },
+};
+export const getProduct = (id) => PRODUCTS[id] || PRODUCTS.sky;
+
 export const SKY_DEFAULT_LOGO = "/sky/SKYEXCHANGE%20login_files/logo.png";
 
 export const TIGER_DEFAULT_LOGO = "/tiger/theme%20tiger_files/logo-text.png";
@@ -356,10 +401,12 @@ export function useConfig() {
   const [siteNamesByTheme, setSiteNamesByTheme] = useState({
     sky: "SKYEXCHANGE",
     tiger: "TIGEREXCH",
+    reddy: "REDDY247",
   });
   const [brandByTheme, setBrandByTheme] = useState({
     sky: SKY_DEFAULT_BRAND,
     tiger: TIGER_DEFAULT_BRAND,
+    reddy: REDDY_PRESETS[0].brand,
   });
   // Which variant CODE is selected per theme. Needed because several variants
   // share the same brand hex (Yl01/Yl03 both #FFB600, Bu01/Bu02 both #005DAC,
@@ -368,19 +415,20 @@ export function useConfig() {
   const [selectedCodeByTheme, setSelectedCodeByTheme] = useState({
     sky: SKY_PRESETS[0]?.code,
     tiger: TIGER_PRESETS[0]?.code,
+    reddy: REDDY_PRESETS[0]?.code,
   });
   // Per-theme custom logos. `primary` = the main text/header logo. `mark` = the graphical
   // icon used in the Tiger sidenav (and as a secondary mark elsewhere). `null` falls back
   // to the theme's built-in default (real Sky247 PNG / real Tiger PNGs).
-  const [customLogoByTheme, setCustomLogoByTheme] = useState({ sky: null, tiger: null });
-  const [customMarkByTheme, setCustomMarkByTheme] = useState({ sky: null, tiger: null });
-  const [logoFileNameByTheme, setLogoFileNameByTheme] = useState({ sky: "", tiger: "" });
-  const [markFileNameByTheme, setMarkFileNameByTheme] = useState({ sky: "", tiger: "" });
+  const [customLogoByTheme, setCustomLogoByTheme] = useState({ sky: null, tiger: null, reddy: null });
+  const [customMarkByTheme, setCustomMarkByTheme] = useState({ sky: null, tiger: null, reddy: null });
+  const [logoFileNameByTheme, setLogoFileNameByTheme] = useState({ sky: "", tiger: "", reddy: "" });
+  const [markFileNameByTheme, setMarkFileNameByTheme] = useState({ sky: "", tiger: "", reddy: "" });
   const [logoError, setLogoError] = useState("");
   const [markError, setMarkError] = useState("");
   // Per-theme display height (px) for each logo slot. 100% = native size.
-  const [logoSizeByTheme, setLogoSizeByTheme] = useState({ sky: 36, tiger: 32 });
-  const [markSizeByTheme, setMarkSizeByTheme] = useState({ sky: 36, tiger: 64 });
+  const [logoSizeByTheme, setLogoSizeByTheme] = useState({ sky: 36, tiger: 32, reddy: 36 });
+  const [markSizeByTheme, setMarkSizeByTheme] = useState({ sky: 36, tiger: 64, reddy: 36 });
 
   // Resolved logos for the active theme.
   const customLogo = customLogoByTheme[activeTheme];
@@ -443,7 +491,7 @@ export function useConfig() {
   const resetBrand = useCallback(() => {
     setBrandByTheme((prev) => ({
       ...prev,
-      [activeTheme]: activeTheme === "sky" ? SKY_DEFAULT_BRAND : TIGER_DEFAULT_BRAND,
+      [activeTheme]: getProduct(activeTheme).presets[0].brand,
     }));
   }, [activeTheme]);
 

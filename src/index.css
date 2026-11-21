@@ -21,13 +21,9 @@
   padding: 0;
 }
 
+/* Page-level sizing, scrolling and type live in site.css */
 html, body, #root {
-  height: 100%;
   width: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  background: #0b0f14;
-  color: #fff;
-  overflow: hidden;
 }
 
 button {

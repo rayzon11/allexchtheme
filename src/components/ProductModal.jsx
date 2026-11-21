@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
-import { SKY_VIEWS, TIGER_VIEWS } from "../hooks/useConfig";
+import { getProduct } from "../hooks/useConfig";
 
 /**
  * Amazon-style full product view. Opens when a customer clicks a theme card.
  * Big main image + thumbnail strip of all 6 views, variant info, colour chips,
  * and clear Request / Customize CTAs.
  */
-export default function ProductModal({ variant, isSky, onClose, onRequest, onCustomize }) {
+export default function ProductModal({ variant, productId, onClose, onRequest, onCustomize }) {
   const views = useMemo(() => {
     if (!variant) return [];
-    const map = (isSky ? SKY_VIEWS : TIGER_VIEWS)[variant.code] || {};
+    const map = getProduct(productId).views[variant.code] || {};
     return [
       { label: "Desktop · Home", kind: "desktop", src: map.desktopHome },
       { label: "Desktop · Login", kind: "desktop", src: map.desktopLogin },
@@ -18,7 +18,7 @@ export default function ProductModal({ variant, isSky, onClose, onRequest, onCus
       { label: "Mobile · Login", kind: "mobile", src: map.mobileLogin },
       { label: "Mobile · After login", kind: "mobile", src: map.mobileAfterLogin },
     ].filter((v) => v.src);
-  }, [variant, isSky]);
+  }, [variant, productId]);
 
   const [active, setActive] = useState(0);
 
@@ -74,7 +74,7 @@ export default function ProductModal({ variant, isSky, onClose, onRequest, onCus
             <span className="pm-group">{variant.group}</span>
           </div>
           <h2 className="pm-name">{variant.name}</h2>
-          <p className="pm-platform">{isSky ? "Sky Exchange" : "Tiger Exch"} · white-label theme</p>
+          <p className="pm-platform">{getProduct(productId).name} · white-label theme</p>
 
           <div className="pm-colours">
             <div className="pm-colour">
