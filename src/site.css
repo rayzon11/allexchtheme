@@ -691,3 +691,27 @@ body, #root {
 
 /* the load-in turn plays once per visit, not on every platform switch */
 .stage-tilt { animation-duration: 0.7s; }
+
+/* ---------- colour families in the grid ---------- */
+.family { margin-top: 28px; }
+.family:first-of-type { margin-top: 14px; }
+.family-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line-soft);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.family-head i { width: 14px; height: 14px; border-radius: 4px; }
+.family-head b { margin-left: 2px; font-family: var(--body); font-size: 14px; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+.family .grid { margin-top: 16px; }
+@media (max-width: 560px) {
+  .family { margin-top: 24px; }
+  .family-head { font-size: 19px; padding-bottom: 10px; }
+  .family .grid { margin-top: 12px; }
+}

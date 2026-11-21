@@ -57,11 +57,6 @@ export default function App() {
     return GROUP_ORDER.filter((g) => buckets[g]).map((g) => ({ group: g, items: buckets[g] }));
   }, [product]);
 
-  const visible = useMemo(
-    () => groups.filter((g) => filter === "All" || g.group === filter).flatMap((g) => g.items),
-    [groups, filter]
-  );
-
   const showPlatform = (id) => {
     setActiveTheme(id);
     stageRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -259,37 +254,49 @@ export default function App() {
             ))}
           </div>
 
-          <div className="grid">
-            {visible.map((p) => {
-              const active = p.code === variant.code;
-              const phone = product.views[p.code]?.mobileHome;
-              return (
-                <button
-                  key={activeTheme + p.code}
-                  type="button"
-                  className={`card${active ? " is-active" : ""}`}
-                  style={{ "--sw": p.brand }}
-                  onClick={() => pickFromGrid(p)}
-                  aria-pressed={active}
-                >
-                  <span className="card-shot">
-                    <img src={p.preview} alt={`${product.name} ${p.name}, desktop home`} loading="lazy" />
-                    {phone && (
-                      <span className="card-phone"><img src={phone} alt="" loading="lazy" /></span>
-                    )}
-                  </span>
-                  <span className="card-foot">
-                    <span className="card-sw" />
-                    <span className="card-text">
-                      <strong>{p.name}</strong>
-                      <small><span>{p.code}</span><span>{p.brand.toUpperCase()}</span></small>
-                    </span>
-                    {active && <span className="card-on">Selected</span>}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          {/* Grouped by colour family, as in the earlier gallery */}
+          {groups
+            .filter((g) => filter === "All" || g.group === filter)
+            .map(({ group, items }) => (
+              <div className="family" key={group}>
+                <h3 className="family-head">
+                  <i style={{ background: SKY_GROUP_COLOURS[group] }} />
+                  {group}
+                  <b>{items.length}</b>
+                </h3>
+                <div className="grid">
+                  {items.map((p) => {
+                    const active = p.code === variant.code;
+                    const phone = product.views[p.code]?.mobileHome;
+                    return (
+                      <button
+                        key={activeTheme + p.code}
+                        type="button"
+                        className={`card${active ? " is-active" : ""}`}
+                        style={{ "--sw": p.brand }}
+                        onClick={() => pickFromGrid(p)}
+                        aria-pressed={active}
+                      >
+                        <span className="card-shot">
+                          <img src={p.preview} alt={`${product.name} ${p.name}, desktop home`} loading="lazy" />
+                          {phone && (
+                            <span className="card-phone"><img src={phone} alt="" loading="lazy" /></span>
+                          )}
+                        </span>
+                        <span className="card-foot">
+                          <span className="card-sw" />
+                          <span className="card-text">
+                            <strong>{p.name}</strong>
+                            <small><span>{p.code}</span><span>{p.brand.toUpperCase()}</span></small>
+                          </span>
+                          {active && <span className="card-on">Selected</span>}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
         </section>
 
         <section className="compare" id="compare">
