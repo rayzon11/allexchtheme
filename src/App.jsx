@@ -47,6 +47,18 @@ export default function App() {
     setFilter("All");
   }, [activeTheme]);
 
+  // Warm the cache for this platform's home screens so switching colour
+  // shows the new design at once instead of an empty window.
+  useEffect(() => {
+    const t = setTimeout(() => {
+      product.presets.forEach((p) => {
+        const v = product.views[p.code] || {};
+        [v.desktopHome, v.mobileHome].forEach((src) => { if (src) new Image().src = src; });
+      });
+    }, 600);
+    return () => clearTimeout(t);
+  }, [product]);
+
   const groups = useMemo(() => {
     const buckets = {};
     product.presets.forEach((p) => { (buckets[p.group] ||= []).push(p); });
@@ -219,7 +231,7 @@ export default function App() {
               const phone = product.views[p.code]?.mobileHome;
               return (
                 <button
-                  key={p.code}
+                  key={activeTheme + p.code}
                   type="button"
                   className={`card${active ? " is-active" : ""}`}
                   style={{ "--sw": p.brand }}

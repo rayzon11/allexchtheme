@@ -48,12 +48,12 @@ export default function Stage({ desktopSrc, mobileSrc, backSrc, brand, label, on
 
         <button type="button" className="win win-front" onClick={() => onZoom?.("desktop")} aria-label={`${label}, desktop. Open full size`}>
           <div className="win-bar"><i /><i /><i /><span>yourbrand.com</span></div>
-          <img key={desktopSrc} src={desktopSrc} alt={`${label}, desktop`} />
+          <img src={desktopSrc} alt={`${label}, desktop`} />
         </button>
 
         {mobileSrc && (
           <button type="button" className="phone" onClick={() => onZoom?.("mobile")} aria-label={`${label}, mobile. Open full size`}>
-            <img key={mobileSrc} src={mobileSrc} alt={`${label}, mobile`} />
+            <img src={mobileSrc} alt={`${label}, mobile`} />
           </button>
         )}
       </div>
