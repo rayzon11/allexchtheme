@@ -688,3 +688,6 @@ body, #root {
   .platform { grid-template-rows: auto 1fr auto; align-items: start; }
   .platform .cell { align-self: end; }
 }
+
+/* the load-in turn plays once per visit, not on every platform switch */
+.stage-tilt { animation-duration: 0.7s; }

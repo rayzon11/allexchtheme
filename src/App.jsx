@@ -159,7 +159,10 @@ export default function App() {
           </div>
 
           <div className="hero-show" ref={stageRef}>
+            {/* keyed by platform: a new platform starts with an empty stage
+                rather than the previous platform's screens */}
             <Stage
+              key={activeTheme}
               desktopSrc={views[screen.desktop] || variant.preview}
               mobileSrc={views[screen.mobile]}
               backSrc={nextScreen && nextScreen !== screen ? views[nextScreen.desktop] : null}
@@ -365,7 +368,7 @@ export default function App() {
       {/* Mobile: the choice and the action stay within thumb reach */}
       <div className="dock">
         <span className="dock-shot" style={{ "--sw": variant.brand }}>
-          <img src={views.mobileHome || variant.preview} alt="" />
+          <img key={activeTheme} src={views.mobileHome || variant.preview} alt="" />
         </span>
         <div className="dock-text">
           <strong>{product.name}</strong>
