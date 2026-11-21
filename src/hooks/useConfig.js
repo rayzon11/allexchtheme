@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 
+// Screenshots under /shop are cached by browsers for a day (vercel.json).
+// Every path carries ?v=N; when a picture is replaced under the same file
+// name, raise N everywhere so phones fetch the new one at once.
+
 // Brand colour per theme. Defaults match the saved HTML appearance so the app opens
 // looking exactly like the original Sky247 and TigerExch pages.
 export const SKY_DEFAULT_BRAND = "#FFB600"; // gold — matches the first Sky variant (Yl01 Classic Gold)
@@ -20,38 +24,38 @@ export const TIGER_DEFAULT_BRAND = "#FFB600"; // gold — matches the first Tige
 //   sky-<code>-mobile-after-login.png   home (logged in, mobile)
 export const SKY_PRESETS = [
   // ── YELLOW ──
-  { code: "Yl01", name: "Classic Gold",  brand: "#FFB600", accent: "#68C092", group: "Yellow", preview: "/shop/sky-yl01-desktop.jpg" },
-  { code: "Yl02", name: "Cream",         brand: "#FFE8A3", accent: "#68C092", group: "Yellow", preview: "/shop/sky-yl02-desktop.jpg" },
-  { code: "Yl03", name: "Gold Navy",     brand: "#FFB600", accent: "#1D3557", group: "Yellow", preview: "/shop/sky-yl03-desktop.jpg" },
+  { code: "Yl01", name: "Classic Gold",  brand: "#FFB600", accent: "#68C092", group: "Yellow", preview: "/shop/sky-yl01-desktop.jpg?v=2" },
+  { code: "Yl02", name: "Cream",         brand: "#FFE8A3", accent: "#68C092", group: "Yellow", preview: "/shop/sky-yl02-desktop.jpg?v=2" },
+  { code: "Yl03", name: "Gold Navy",     brand: "#FFB600", accent: "#1D3557", group: "Yellow", preview: "/shop/sky-yl03-desktop.jpg?v=2" },
 
   // ── GREEN ──
-  { code: "Gn01", name: "Bright Green",  brand: "#03B44F", accent: "#307234", group: "Green",  preview: "/shop/sky-gn01-desktop.jpg" },
-  { code: "Gn02", name: "Forest",        brand: "#15805E", accent: "#343A40", group: "Green",  preview: "/shop/sky-gn02-desktop.jpg" },
-  { code: "Gn03", name: "Mint",          brand: "#68C092", accent: "#588157", group: "Green",  preview: "/shop/sky-gn03-desktop.jpg" },
-  { code: "Gn04", name: "Olive Gold",    brand: "#486F05", accent: "#FFB600", group: "Green",  preview: "/shop/sky-gn04-desktop.jpg" },
+  { code: "Gn01", name: "Bright Green",  brand: "#03B44F", accent: "#307234", group: "Green",  preview: "/shop/sky-gn01-desktop.jpg?v=2" },
+  { code: "Gn02", name: "Forest",        brand: "#15805E", accent: "#343A40", group: "Green",  preview: "/shop/sky-gn02-desktop.jpg?v=2" },
+  { code: "Gn03", name: "Mint",          brand: "#68C092", accent: "#588157", group: "Green",  preview: "/shop/sky-gn03-desktop.jpg?v=2" },
+  { code: "Gn04", name: "Olive Gold",    brand: "#486F05", accent: "#FFB600", group: "Green",  preview: "/shop/sky-gn04-desktop.jpg?v=2" },
 
   // ── ORANGE ──
-  { code: "Og01", name: "Orange",        brand: "#F37335", accent: "#6C757D", group: "Orange", preview: "/shop/sky-og01-desktop.jpg" },
-  { code: "Og02", name: "Tomato Blue",   brand: "#F1592A", accent: "#066BC1", group: "Orange", preview: "/shop/sky-og02-desktop.jpg" },
+  { code: "Og01", name: "Orange",        brand: "#F37335", accent: "#6C757D", group: "Orange", preview: "/shop/sky-og01-desktop.jpg?v=2" },
+  { code: "Og02", name: "Tomato Blue",   brand: "#F1592A", accent: "#066BC1", group: "Orange", preview: "/shop/sky-og02-desktop.jpg?v=2" },
 
   // ── RED ──
-  { code: "Rd01", name: "Dark Red",      brand: "#920000", accent: "#000000", group: "Red",    preview: "/shop/sky-rd01-desktop.jpg" },
-  { code: "Rd02", name: "Maroon Gold",   brand: "#810000", accent: "#D4AF37", group: "Red",    preview: "/shop/sky-rd02-desktop.jpg" },
-  { code: "Rd03", name: "Wine",          brand: "#36010B", accent: "#9B001D", group: "Red",    preview: "/shop/sky-rd03-desktop.jpg" },
+  { code: "Rd01", name: "Dark Red",      brand: "#920000", accent: "#000000", group: "Red",    preview: "/shop/sky-rd01-desktop.jpg?v=2" },
+  { code: "Rd02", name: "Maroon Gold",   brand: "#810000", accent: "#D4AF37", group: "Red",    preview: "/shop/sky-rd02-desktop.jpg?v=2" },
+  { code: "Rd03", name: "Wine",          brand: "#36010B", accent: "#9B001D", group: "Red",    preview: "/shop/sky-rd03-desktop.jpg?v=2" },
 
   // ── BLUE ──
-  { code: "Bu01", name: "Royal Blue",    brand: "#005DAC", accent: "#00C2FF", group: "Blue",   preview: "/shop/sky-bu01-desktop.jpg" },
-  { code: "Bu02", name: "Cobalt Sky",    brand: "#005DAC", accent: "#E6F0FA", group: "Blue",   preview: "/shop/sky-bu02-desktop.jpg" },
-  { code: "Bu03", name: "Navy Gold",     brand: "#01294B", accent: "#D4AF37", group: "Blue",   preview: "/shop/sky-bu03-desktop.jpg" },
+  { code: "Bu01", name: "Royal Blue",    brand: "#005DAC", accent: "#00C2FF", group: "Blue",   preview: "/shop/sky-bu01-desktop.jpg?v=2" },
+  { code: "Bu02", name: "Cobalt Sky",    brand: "#005DAC", accent: "#E6F0FA", group: "Blue",   preview: "/shop/sky-bu02-desktop.jpg?v=2" },
+  { code: "Bu03", name: "Navy Gold",     brand: "#01294B", accent: "#D4AF37", group: "Blue",   preview: "/shop/sky-bu03-desktop.jpg?v=2" },
 
   // ── PURPLE ──
-  { code: "Pl01", name: "Deep Purple",   brand: "#400078", accent: "#DD8543", group: "Purple", preview: "/shop/sky-pl01-desktop.jpg" },
-  { code: "Pl02", name: "Lavender",      brand: "#6A4C93", accent: "#400078", group: "Purple", preview: "/shop/sky-pl02-desktop.jpg" },
+  { code: "Pl01", name: "Deep Purple",   brand: "#400078", accent: "#DD8543", group: "Purple", preview: "/shop/sky-pl01-desktop.jpg?v=2" },
+  { code: "Pl02", name: "Lavender",      brand: "#6A4C93", accent: "#400078", group: "Purple", preview: "/shop/sky-pl02-desktop.jpg?v=2" },
 
   // ── WHITE / SILVER ──
-  { code: "Wt01", name: "Silver Navy",   brand: "#E4E4E4", accent: "#1D3558", group: "White",  preview: "/shop/sky-wt01-desktop.jpg" },
-  { code: "Wt02", name: "Steel Grey",    brand: "#A5A5A5", accent: "#6182B7", group: "White",  preview: "/shop/sky-wt02-desktop.jpg" },
-  { code: "Wt03", name: "Pearl Slate",   brand: "#E4E4E4", accent: "#1B303B", group: "White",  preview: "/shop/sky-wt03-desktop.jpg" },
+  { code: "Wt01", name: "Silver Navy",   brand: "#E4E4E4", accent: "#1D3558", group: "White",  preview: "/shop/sky-wt01-desktop.jpg?v=2" },
+  { code: "Wt02", name: "Steel Grey",    brand: "#A5A5A5", accent: "#6182B7", group: "White",  preview: "/shop/sky-wt02-desktop.jpg?v=2" },
+  { code: "Wt03", name: "Pearl Slate",   brand: "#E4E4E4", accent: "#1B303B", group: "White",  preview: "/shop/sky-wt03-desktop.jpg?v=2" },
 ];
 
 // Build the per-variant view set for the swipe carousel (DesignPanel reads this).
@@ -61,12 +65,12 @@ export const SKY_VIEWS = Object.fromEntries(
     const code = p.code.toLowerCase();
     const base = "/shop/sky-" + code;
     return [p.code, {
-      desktopHome:        base + "-desktop.jpg",
-      desktopLogin:       base + "-desktop-login.jpg",
-      desktopAfterLogin:  base + "-desktop-after-login.jpg",
-      mobileHome:         base + "-mobile.jpg",
-      mobileLogin:        base + "-mobile-login.jpg",
-      mobileAfterLogin:   base + "-mobile-after-login.jpg",
+      desktopHome:        base + "-desktop.jpg?v=2",
+      desktopLogin:       base + "-desktop-login.jpg?v=2",
+      desktopAfterLogin:  base + "-desktop-after-login.jpg?v=2",
+      mobileHome:         base + "-mobile.jpg?v=2",
+      mobileLogin:        base + "-mobile-login.jpg?v=2",
+      mobileAfterLogin:   base + "-mobile-after-login.jpg?v=2",
     }];
   })
 );
@@ -90,10 +94,10 @@ export const SKY_GROUP_COLOURS = {
 // if a component still reads from the old name. Real per-variant captures live
 // in SKY_VIEWS above (keyed by preset code).
 export const SKY_VIEWS_FALLBACK = SKY_VIEWS.Yl01 || {
-  desktopHome: "/shop/sky-yl01-desktop.jpg",
-  desktopLogin: "/shop/sky-yl01-desktop-login.jpg",
-  mobileHome: "/shop/sky-yl01-mobile.jpg",
-  mobileLogin: "/shop/sky-yl01-mobile-login.jpg",
+  desktopHome: "/shop/sky-yl01-desktop.jpg?v=2",
+  desktopLogin: "/shop/sky-yl01-desktop-login.jpg?v=2",
+  mobileHome: "/shop/sky-yl01-mobile.jpg?v=2",
+  mobileLogin: "/shop/sky-yl01-mobile-login.jpg?v=2",
 };
 
 // Theme catalog — the product picker scales to any number of entries by reading
@@ -114,7 +118,7 @@ export const THEMES = [
     name: "Sky Exchange",
     tagline: "Iconic gold + dark exchange UI",
     category: "Exchange",
-    cover: "/shop/sky-yl01-desktop.jpg",
+    cover: "/shop/sky-yl01-desktop.jpg?v=2",
     live: true,
   },
   {
@@ -122,7 +126,7 @@ export const THEMES = [
     name: "Tiger Exch",
     tagline: "Dark, bold sportsbook + casino UI",
     category: "Exchange",
-    cover: "/shop/tiger-yl01-desktop.jpg",
+    cover: "/shop/tiger-yl01-desktop.jpg?v=2",
     live: true,
   },
   {
@@ -130,7 +134,7 @@ export const THEMES = [
     name: "Reddy247",
     tagline: "Modern dark exchange + casino lobby",
     category: "Exchange",
-    cover: "/shop/reddy-og01-desktop.jpg",
+    cover: "/shop/reddy-og01-desktop.jpg?v=2",
     live: true,
     isNew: true,
   },
@@ -159,38 +163,38 @@ export const THEMES = [
 //   tiger-<code>-mobile-after-login.jpg   logged in (mobile)
 export const TIGER_PRESETS = [
   // ── YELLOW ──
-  { code: "Yl01", name: "Classic Gold", brand: "#FFB600", accent: "#68C092", group: "Yellow", preview: "/shop/tiger-yl01-desktop.jpg" },
-  { code: "Yl02", name: "Cream",        brand: "#FFE8A3", accent: "#68C092", group: "Yellow", preview: "/shop/tiger-yl02-desktop.jpg" },
-  { code: "Yl03", name: "Gold Navy",    brand: "#FFB600", accent: "#1D3557", group: "Yellow", preview: "/shop/tiger-yl03-desktop.jpg" },
+  { code: "Yl01", name: "Classic Gold", brand: "#FFB600", accent: "#68C092", group: "Yellow", preview: "/shop/tiger-yl01-desktop.jpg?v=2" },
+  { code: "Yl02", name: "Cream",        brand: "#FFE8A3", accent: "#68C092", group: "Yellow", preview: "/shop/tiger-yl02-desktop.jpg?v=2" },
+  { code: "Yl03", name: "Gold Navy",    brand: "#FFB600", accent: "#1D3557", group: "Yellow", preview: "/shop/tiger-yl03-desktop.jpg?v=2" },
 
   // ── GREEN ──
-  { code: "Gn01", name: "Bright Green", brand: "#03B44F", accent: "#307234", group: "Green",  preview: "/shop/tiger-gn01-desktop.jpg" },
-  { code: "Gn02", name: "Forest",       brand: "#15805E", accent: "#343A40", group: "Green",  preview: "/shop/tiger-gn02-desktop.jpg" },
-  { code: "Gn03", name: "Mint",         brand: "#68C092", accent: "#588157", group: "Green",  preview: "/shop/tiger-gn03-desktop.jpg" },
-  { code: "Gn04", name: "Olive Gold",   brand: "#486F05", accent: "#FFB600", group: "Green",  preview: "/shop/tiger-gn04-desktop.jpg" },
+  { code: "Gn01", name: "Bright Green", brand: "#03B44F", accent: "#307234", group: "Green",  preview: "/shop/tiger-gn01-desktop.jpg?v=2" },
+  { code: "Gn02", name: "Forest",       brand: "#15805E", accent: "#343A40", group: "Green",  preview: "/shop/tiger-gn02-desktop.jpg?v=2" },
+  { code: "Gn03", name: "Mint",         brand: "#68C092", accent: "#588157", group: "Green",  preview: "/shop/tiger-gn03-desktop.jpg?v=2" },
+  { code: "Gn04", name: "Olive Gold",   brand: "#486F05", accent: "#FFB600", group: "Green",  preview: "/shop/tiger-gn04-desktop.jpg?v=2" },
 
   // ── ORANGE ──
-  { code: "Og01", name: "Orange",       brand: "#F37335", accent: "#6C757D", group: "Orange", preview: "/shop/tiger-og01-desktop.jpg" },
-  { code: "Og02", name: "Tomato Blue",  brand: "#F1592A", accent: "#066BC1", group: "Orange", preview: "/shop/tiger-og02-desktop.jpg" },
+  { code: "Og01", name: "Orange",       brand: "#F37335", accent: "#6C757D", group: "Orange", preview: "/shop/tiger-og01-desktop.jpg?v=2" },
+  { code: "Og02", name: "Tomato Blue",  brand: "#F1592A", accent: "#066BC1", group: "Orange", preview: "/shop/tiger-og02-desktop.jpg?v=2" },
 
   // ── RED ──
-  { code: "Rd01", name: "Dark Red",     brand: "#920000", accent: "#000000", group: "Red",    preview: "/shop/tiger-rd01-desktop.jpg" },
-  { code: "Rd02", name: "Maroon Gold",  brand: "#810000", accent: "#D4AF37", group: "Red",    preview: "/shop/tiger-rd02-desktop.jpg" },
-  { code: "Rd03", name: "Wine",         brand: "#36010B", accent: "#9B001D", group: "Red",    preview: "/shop/tiger-rd03-desktop.jpg" },
+  { code: "Rd01", name: "Dark Red",     brand: "#920000", accent: "#000000", group: "Red",    preview: "/shop/tiger-rd01-desktop.jpg?v=2" },
+  { code: "Rd02", name: "Maroon Gold",  brand: "#810000", accent: "#D4AF37", group: "Red",    preview: "/shop/tiger-rd02-desktop.jpg?v=2" },
+  { code: "Rd03", name: "Wine",         brand: "#36010B", accent: "#9B001D", group: "Red",    preview: "/shop/tiger-rd03-desktop.jpg?v=2" },
 
   // ── BLUE ──
-  { code: "Bu01", name: "Royal Blue",   brand: "#005DAC", accent: "#00C2FF", group: "Blue",   preview: "/shop/tiger-bu01-desktop.jpg" },
-  { code: "Bu02", name: "Cobalt Sky",   brand: "#005DAC", accent: "#E6F0FA", group: "Blue",   preview: "/shop/tiger-bu02-desktop.jpg" },
-  { code: "Bu03", name: "Navy Gold",    brand: "#01294B", accent: "#D4AF37", group: "Blue",   preview: "/shop/tiger-bu03-desktop.jpg" },
+  { code: "Bu01", name: "Royal Blue",   brand: "#005DAC", accent: "#00C2FF", group: "Blue",   preview: "/shop/tiger-bu01-desktop.jpg?v=2" },
+  { code: "Bu02", name: "Cobalt Sky",   brand: "#005DAC", accent: "#E6F0FA", group: "Blue",   preview: "/shop/tiger-bu02-desktop.jpg?v=2" },
+  { code: "Bu03", name: "Navy Gold",    brand: "#01294B", accent: "#D4AF37", group: "Blue",   preview: "/shop/tiger-bu03-desktop.jpg?v=2" },
 
   // ── PURPLE ──
-  { code: "Pl01", name: "Deep Purple",  brand: "#400078", accent: "#DD8543", group: "Purple", preview: "/shop/tiger-pl01-desktop.jpg" },
-  { code: "Pl02", name: "Lavender",     brand: "#6A4C93", accent: "#400078", group: "Purple", preview: "/shop/tiger-pl02-desktop.jpg" },
+  { code: "Pl01", name: "Deep Purple",  brand: "#400078", accent: "#DD8543", group: "Purple", preview: "/shop/tiger-pl01-desktop.jpg?v=2" },
+  { code: "Pl02", name: "Lavender",     brand: "#6A4C93", accent: "#400078", group: "Purple", preview: "/shop/tiger-pl02-desktop.jpg?v=2" },
 
   // ── WHITE / SILVER ──
-  { code: "Wt01", name: "Silver Navy",  brand: "#E4E4E4", accent: "#1D3558", group: "White",  preview: "/shop/tiger-wt01-desktop.jpg" },
-  { code: "Wt02", name: "Steel Grey",   brand: "#A5A5A5", accent: "#6182B7", group: "White",  preview: "/shop/tiger-wt02-desktop.jpg" },
-  { code: "Wt03", name: "Pearl Slate",  brand: "#E4E4E4", accent: "#1B303B", group: "White",  preview: "/shop/tiger-wt03-desktop.jpg" },
+  { code: "Wt01", name: "Silver Navy",  brand: "#E4E4E4", accent: "#1D3558", group: "White",  preview: "/shop/tiger-wt01-desktop.jpg?v=2" },
+  { code: "Wt02", name: "Steel Grey",   brand: "#A5A5A5", accent: "#6182B7", group: "White",  preview: "/shop/tiger-wt02-desktop.jpg?v=2" },
+  { code: "Wt03", name: "Pearl Slate",  brand: "#E4E4E4", accent: "#1B303B", group: "White",  preview: "/shop/tiger-wt03-desktop.jpg?v=2" },
 ];
 
 // Per-variant Tiger captures for the swipe carousel (keyed by preset code).
@@ -198,12 +202,12 @@ export const TIGER_VIEWS = Object.fromEntries(
   TIGER_PRESETS.map((p) => {
     const base = "/shop/tiger-" + p.code.toLowerCase();
     return [p.code, {
-      desktopHome:       base + "-desktop.jpg",
-      desktopLogin:      base + "-desktop-login.jpg",
-      desktopAfterLogin: base + "-desktop-after-login.jpg",
-      mobileHome:        base + "-mobile.jpg",
-      mobileLogin:       base + "-mobile-login.jpg",
-      mobileAfterLogin:  base + "-mobile-after-login.jpg",
+      desktopHome:       base + "-desktop.jpg?v=2",
+      desktopLogin:      base + "-desktop-login.jpg?v=2",
+      desktopAfterLogin: base + "-desktop-after-login.jpg?v=2",
+      mobileHome:        base + "-mobile.jpg?v=2",
+      mobileLogin:       base + "-mobile-login.jpg?v=2",
+      mobileAfterLogin:  base + "-mobile-after-login.jpg?v=2",
     }];
   })
 );
@@ -225,16 +229,16 @@ export const REDDY_PRESETS = [
   { code: "Bu01", name: "Royal Blue",   brand: "#264EA4", accent: REDDY_ACCENT, group: "Blue"   },
   { code: "Pl01", name: "Deep Purple",  brand: "#512B78", accent: REDDY_ACCENT, group: "Purple" },
   { code: "Wt01", name: "Silver Navy",  brand: "#C4CCD6", accent: REDDY_ACCENT, group: "White"  },
-].map((p) => ({ ...p, preview: "/shop/reddy-" + p.code.toLowerCase() + "-desktop.jpg" }));
+].map((p) => ({ ...p, preview: "/shop/reddy-" + p.code.toLowerCase() + "-desktop.jpg?v=2" }));
 
 export const REDDY_VIEWS = Object.fromEntries(
   REDDY_PRESETS.map((p) => {
     const base = "/shop/reddy-" + p.code.toLowerCase();
     return [p.code, {
-      desktopHome:  base + "-desktop.jpg",
-      desktopLogin: base + "-desktop-login.jpg",
-      mobileHome:   base + "-mobile.jpg",
-      mobileLogin:  base + "-mobile-login.jpg",
+      desktopHome:  base + "-desktop.jpg?v=2",
+      desktopLogin: base + "-desktop-login.jpg?v=2",
+      mobileHome:   base + "-mobile.jpg?v=2",
+      mobileLogin:  base + "-mobile-login.jpg?v=2",
     }];
   })
 );
